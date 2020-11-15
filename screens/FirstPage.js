@@ -1,29 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet, View, Button, TextInput } from "react-native";
 import { Text } from "react-native-elements";
+import { loginCustomer } from "../store/actions/storeActions";
 
 // import LottieView from "lottie-react-native";
 
 export default function FirstPage(props) {
-  const [phoneNumber, setPhoneNumber] = React.useState("");
+  const dispatch = useDispatch();
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const { access } = useSelector((state) => state);
 
   function goToHomePage() {
     props.navigation.navigate("HomePage", {
       phoneNumber: phoneNumber,
     });
   }
+  useEffect(() => {
+    if (access) {
+      goToHomePage();
+    }
+  }, [access]);
+
+  function login() {
+    if (!phoneNumber) {
+      console.log("cant login please input correct phone number");
+    } else {
+      dispatch(loginCustomer(phoneNumber));
+      if (access) {
+        console.log("success login");
+      } else {
+        console.log("login failed");
+      }
+    }
+  }
 
   return (
     <View style={styles.container}>
-      <Text>{phoneNumber}</Text>
       <View style={styles.inputBox}>
-        {/* <LottieView
-          source={require("../assets/lf20_pMCvhM.json")}
-          loop={true}
-          autoPlay={true}
-          progress={0}
-          style={{ width: 200, height: 200, justifyContent: "center" }}
-        /> */}
         <Text style={styles.text}>Sebelum belanja masukin nomor handphone</Text>
         <TextInput
           style={styles.input}
@@ -32,6 +47,8 @@ export default function FirstPage(props) {
           keyboardType="phone-pad"
           onChangeText={(e) => setPhoneNumber(e)}
           placeholder="phone number"
+          maxLength={13}
+          minLength={11}
         />
       </View>
 
@@ -39,7 +56,7 @@ export default function FirstPage(props) {
         style={{ width: 200 }}
         color="#E14C17"
         title="Mulai Belanja"
-        onPress={goToHomePage}
+        onPress={login}
       />
     </View>
   );

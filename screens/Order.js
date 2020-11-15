@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   View,
   Text,
@@ -8,11 +9,23 @@ import {
   TouchableOpacity,
   Image,
   Button,
+  Alert,
+  Modal,
+  TouchableHighlight,
+  TextInput,
 } from "react-native";
 import { Divider } from "react-native-elements";
 import image from "../assets/backgroundOrder.jpg";
+import { fetchOrdersCarts } from "../store/actions/storeActions";
 
 export default function Order(props) {
+  // modals
+  const [modalVisible, setModalVisible] = useState(false);
+  const [newQuantity, setNewQuantity] = useState(0);
+
+  // state
+  const { access, orders } = useSelector((state) => state);
+  const dispatch = useDispatch();
   const dummy = [
     {
       id: 1,
@@ -65,6 +78,12 @@ export default function Order(props) {
     },
   ];
 
+  useEffect(() => {
+    dispatch(fetchOrdersCarts(access));
+  }, []);
+
+  const { itemQuantity, total } = props.route.params;
+
   function goToPayment() {
     console.log("navigate to checkout page");
     props.navigation.navigate("Payment");
@@ -96,7 +115,7 @@ export default function Order(props) {
             }}
           >
             <Text style={{ fontSize: 12 }}>Sub Total</Text>
-            <Text style={{ fontSize: 12 }}>Rp.50.000</Text>
+            <Text style={{ fontSize: 12 }}>Rp.{total}</Text>
           </View>
         </View>
         <View style={styles.bill}>
@@ -126,20 +145,85 @@ export default function Order(props) {
               }}
             >
               <Text style={{ fontSize: 15, fontWeight: "bold" }}>Totals</Text>
-              <Text style={{ fontSize: 15, fontWeight: "bold" }}>Rp.3.500</Text>
+              <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+                Rp.{total + 3500}
+              </Text>
             </View>
           </Divider>
         </View>
       </View>
+      {/* modals */}
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Edit quantity</Text>
+              <Text>{newQuantity}</Text>
+
+              <TextInput
+                style={styles.input}
+                keyboardType="numeric"
+                onChangeText={(e) => setNewQuantity(e)}
+                placeholder="insert quantity"
+                maxLength={1}
+                minLength={0}
+              />
+
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                <Text style={styles.textStyle}>Submit</Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight
+                style={{ ...styles.removeButton, backgroundColor: "#2196F3" }}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                <Text style={styles.textStyle}>Remove</Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight
+                style={{ ...styles.closeButton, backgroundColor: "#2196F3" }}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                <Text style={styles.textStyle}>Cancel</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
+      </View>
+      {/* modals end */}
+
       <View style={styles.boxListOrder}>
         <Text h5 style={{ fontWeight: "bold" }}>
           Order Items
         </Text>
         <ScrollView showsVerticalScrollIndicator={false}>
+          <Text>{JSON.stringify(orders)}</Text>
           <View>
-            {dummy.map((item) => {
+            {orders.carts.map((item) => {
               return (
-                <TouchableOpacity style={styles.card} key={item.id}>
+                <TouchableOpacity
+                  style={styles.card}
+                  key={item.id}
+                  onPress={() => {
+                    setModalVisible(true);
+                  }}
+                >
                   <Image
                     style={styles.image}
                     source={{
@@ -148,8 +232,8 @@ export default function Order(props) {
                     }}
                   />
                   <View style={styles.innerTextCards}>
-                    <Text h4>CoffeShop</Text>
-                    <Text>Outlet Address Street, Jakarta Selatan</Text>
+                    <Text h4>Product ID : {item.ProductId}</Text>
+                    <Text>quantity : {item.quantity}</Text>
                   </View>
                 </TouchableOpacity>
               );
@@ -157,20 +241,27 @@ export default function Order(props) {
           </View>
         </ScrollView>
       </View>
-      <Button style={styles.checkoutBtn} title="halo" onPress={goToPayment} />
-      <TouchableOpacity style={styles.rightBottomBar} onPress={goToPayment}>
+
+      <TouchableHighlight style={styles.rightBottomBar} onPress={goToPayment}>
         <View style={styles.checkoutBtn}>
           <Text style={{ fontWeight: "bold", fontSize: 16, color: "#fff" }}>
             Process Checkout
           </Text>
         </View>
-      </TouchableOpacity>
+      </TouchableHighlight>
+      <Button
+        title="Proccess Checkout"
+        style={{ marginTop: 200 }}
+        onPress={goToPayment}
+        color="red"
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: "#fff",
     justifyContent: "space-around",
   },
@@ -196,6 +287,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   boxBill: {
+    flex:0.5,
     width: 300,
     height: 120,
     backgroundColor: "#fff",
@@ -213,12 +305,11 @@ const styles = StyleSheet.create({
     elevation: 9,
   },
   boxListOrder: {
-    marginTop: 20,
+    flex: 1.2,
     width: 300,
-    height: 420,
     backgroundColor: "#fff",
-    top: 130,
     left: 50,
+    top:-100,
     borderRadius: 20,
     shadowColor: "#000",
     shadowOffset: {
@@ -260,7 +351,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   checkoutBtn: {
-    top: 500,
+    top: 150,
+    left: 50,
     width: 300,
     height: 40,
     backgroundColor: "#1E2749",
@@ -271,5 +363,90 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  removeButton: {
+    backgroundColor: "red",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  closeButton: {
+    backgroundColor: "blue",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  // modals
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });

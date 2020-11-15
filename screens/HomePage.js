@@ -1,80 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   ScrollView,
   StyleSheet,
   View,
   TouchableOpacity,
   Image,
-  Button,
 } from "react-native";
 import { Text } from "react-native-elements";
-
-// import LottieView from "lottie-react-native";
+import { fetchStore } from "../store/actions/storeActions";
 
 export default function HomePage(props) {
+  const dispatch = useDispatch();
+  const { dataStore } = useSelector((state) => state);
+
+  useEffect(() => {
+    dispatch(fetchStore());
+  }, []);
+
   const { phoneNumber } = props.route.params;
-  console.log(phoneNumber);
 
-  const [storeId, setStoreId] = useState(1);
+  const [storeId, setStoreId] = useState();
 
-  function goToStore() {
-    console.log("navigate to product", storeId);
+  function storeIdHandler(storeId) {
+    setStoreId(storeId);
     props.navigation.navigate("Store", {
       storeId: storeId,
     });
   }
-
-  const dummy = [
-    {
-      id: 1,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 2,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 3,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 4,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 5,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 6,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 7,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-  ];
 
   return (
     <View style={styles.container}>
@@ -92,25 +45,24 @@ export default function HomePage(props) {
             Pilih Toko Terdekat
           </Text>
           <View>
-            {dummy.map((item) => {
+            {dataStore.map((item) => {
               return (
                 <TouchableOpacity
                   style={styles.card}
                   key={item.id}
-                  onPress={goToStore}
+                  onPress={() => storeIdHandler(item.id)}
                 >
                   <Image
-                    onPress={goToStore}
                     style={styles.image}
                     source={{
                       uri:
                         "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
                     }}
                   />
-
                   <View style={styles.innerTextCards}>
-                    <Text h4>CoffeShop</Text>
-                    <Text>Outlet Address Street, Jakarta Selatan</Text>
+                    <Text h4>{item.store_name}</Text>
+                    <Text>{item.store_address}</Text>
+                    <Text>{item.id}</Text>
                   </View>
                 </TouchableOpacity>
               );

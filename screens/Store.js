@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   StyleSheet,
   View,
@@ -6,23 +7,63 @@ import {
   Image,
   Dimensions,
   FlatList,
+  Button,
 } from "react-native";
 import { Text } from "react-native-elements";
-
-// import LottieView from "lottie-react-native";
+import {
+  fetchProducts,
+  addToCarts,
+  checkout,
+  filterProduct,
+  editCartQty,
+} from "../store/actions/storeActions";
 
 export default function Store(props) {
+  const [total, setTotal] = useState(0);
+  const [itemQuantity, setItemQuantity] = useState(0);
+
+  const dispatch = useDispatch();
+  const { dataProducts, carts } = useSelector((state) => state);
+  const { access } = useSelector((state) => state);
+
+  useEffect(() => {
+    dispatch(fetchProducts(storeId, access));
+    setTotal(0);
+    setItemQuantity(0);
+  }, []);
+
   const { storeId } = props.route.params;
   console.log(storeId);
 
-  function goToStore() {
-    console.log("navigate to product", storeId);
-    props.navigation.navigate("HomePage");
-  }
-
   function goToCheckout() {
     console.log("navigate to checkout page");
-    props.navigation.navigate("Order");
+    props.navigation.navigate("Order", {
+      itemQuantity: itemQuantity,
+      total: total
+    });
+  }
+
+  function cartHandler(product) {
+    setTotal(total + product.price);
+    setItemQuantity(itemQuantity + 1);
+    let checkOnCarts = dispatch(filterProduct(product.ProductId));
+    console.log(checkOnCarts);
+    if (!checkOnCarts) {
+      const { ProductId, quantity, payment_status } = product;
+      dispatch(addToCarts(product));
+    } else {
+      console.log("ini tambahin qty ");
+      dispatch(editCartQty(product.ProductId, access));
+    }
+  }
+
+  function checkoutCarts() {
+    if (carts.length > 0) {
+      dispatch(checkout(carts, access));
+      goToCheckout();
+    } else {
+      console.log("cart empty");
+    }
   }
 
   const dummy = [
@@ -91,15 +132,6 @@ export default function Store(props) {
     },
   ];
 
-  const data = [
-    { id: "a", value: "A" },
-    { id: "b", value: "B" },
-    { id: "c", value: "C" },
-    { id: "d", value: "D" },
-    { id: "e", value: "E" },
-    { id: "f", value: "F" },
-  ];
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -118,27 +150,36 @@ export default function Store(props) {
         <View>
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={dummy}
+            data={dataProducts}
             renderItem={({ item }) => (
-              <TouchableOpacity key={item.id} onPress={goToStore}>
+              <TouchableOpacity
+                key={item.id}
+                onPress={() =>
+                  cartHandler({
+                    ProductId: item.id,
+                    quantity: item.stock,
+                    payment_status: "unpaid",
+                    price: item.price,
+                  })
+                }
+              >
                 <View style={styles.card}>
                   <Image
-                    onPress={goToStore}
                     style={styles.image}
-                    source={{
-                      uri:
-                        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                    }}
+                    source={{ uri: item.image_url }}
                   />
+
                   <View style={styles.productTextCard}>
                     <View style={styles.innerTextCards}>
-                      <Text style={{ fontWeight: "bold" }}>{item.title}</Text>
+                      <Text style={{ fontWeight: "bold" }}>
+                        {item.product_name}
+                      </Text>
                       <Text style={{ fontWeight: "bold", fontSize: 10 }}>
-                        Rp. 18.000
+                        Rp. {item.price}
                       </Text>
                     </View>
                     <View style={styles.quantityProduct}>
-                      <Text style={{ fontWeight: "bold" }}>3</Text>
+                      <Text style={{ fontWeight: "bold" }}>{item.stock}</Text>
                     </View>
                   </View>
                 </View>
@@ -151,12 +192,14 @@ export default function Store(props) {
       </View>
       <View style={styles.bottomTotalBar}>
         <View style={styles.leftBottomBar}>
-          <Text style={{ fontSize: 10, color: "white" }}>2 Items</Text>
+          <Text style={{ fontSize: 10, color: "white" }}>
+            {itemQuantity} Items
+          </Text>
           <Text style={{ fontSize: 20, fontWeight: "bold", color: "white" }}>
-            42.000,-
+            {total.toLocaleString("en-US")},-
           </Text>
         </View>
-        <TouchableOpacity style={styles.rightBottomBar} onPress={goToCheckout}>
+        <TouchableOpacity style={styles.rightBottomBar} onPress={checkoutCarts}>
           <View style={styles.checkoutBtn}>
             <Text style={{ fontWeight: "bold", fontSize: 16, color: "#fff" }}>
               Checkout

@@ -11,6 +11,8 @@ import {
   Compleate,
 } from "./screens/index";
 
+import { Provider as StateProvider } from "react-redux";
+import store from "./store/index";
 
 const Stack = createStackNavigator();
 
@@ -20,15 +22,17 @@ Stack.Navigator.defaultProps = {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Landing" component={LandingPage} />
-        <Stack.Screen name="HomePage" component={HomePage} />
-        <Stack.Screen name="Store" component={Store} />
-        <Stack.Screen name="Order" component={Order} />
-        <Stack.Screen name="Payment" component={Payament} />
-        <Stack.Screen name="Compleate" component={Compleate} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <StateProvider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Landing" component={LandingPage} />
+          <Stack.Screen name="HomePage" component={HomePage} />
+          <Stack.Screen name="Store" component={Store} />
+          <Stack.Screen name="Order" component={Order} />
+          <Stack.Screen name="Payment" component={Payament} />
+          <Stack.Screen name="Compleate" component={Compleate} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </StateProvider>
   );
 }
