@@ -1,31 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import { Text } from "react-native-elements";
+import { QRCode } from "react-native-custom-qr-codes-expo";
+import { fetchOrdersCarts } from "../store/actions/storeActions";
+import { useDispatch, useSelector } from "react-redux";
 
 // import LottieView from "lottie-react-native";
+// arr number id
 
 export default function Compleate(props) {
-  const [phoneNumber, setPhoneNumber] = React.useState("");
+  const dipatch = useDispatch();
+  const { orders, access } = useSelector((state) => state);
+  const [qrData, setQrData] = useState();
+
+  useEffect(() => {
+    dipatch(fetchOrdersCarts(access));
+  }, []);
 
   function goToHomePage() {
     props.navigation.navigate("HomePage");
   }
 
+  const filterCart = () => {
+    let dataId;
+    if (orders.carts) {
+      dataId = orders.carts.map((val) => {
+        return val.id;
+      });
+    }
+    return JSON.stringify(dataId);
+  };
+
+  // let dataqr = filterCart();
+  // console.log(dataqr);
+
   return (
     <View style={styles.container}>
       <View style={styles.inputBox}>
+        {/* <Text> carts : {JSON.stringify(orders.carts)}</Text> */}
         <Text style={styles.text}>Thanks for your order</Text>
       </View>
-
-      <Image
-        style={styles.barcode}
-        source={{
-          uri: "https://arifdiyanto.files.wordpress.com/2015/11/qrcodeuk.gif",
-        }}
-      />
-
-      <Text>order ID : 132134</Text>
-
+      {orders.carts ? <QRCode content={filterCart()} size={200} /> : null}
+      <Text>{qrData}</Text>
       <TouchableOpacity style={styles.rightBottomBar} onPress={goToHomePage}>
         <View style={styles.checkoutBtn}>
           <Text style={{ fontWeight: "bold", fontSize: 16, color: "#fff" }}>
@@ -39,6 +55,7 @@ export default function Compleate(props) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     height: 300,
     flex: 1,
     backgroundColor: "#fff",

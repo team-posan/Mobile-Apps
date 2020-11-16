@@ -27,11 +27,36 @@ const reducer = (state = initialState, action) => {
       return { ...state, carts: newCarts };
 
     case "EDIT_CARTS_QTY":
-      console.log("edit cart qty reducer");
+      console.log("masuuk");
+      let filter = state.carts.map((product, index) => {
+        console.log(product);
+        if (product.ProductId == action.payload.ProductIdEdited) {
+          return (state.carts[index].quantity = action.payload.newQuantity);
+        } else {
+          return (state.carts[index] = product);
+        }
+      });
+      console.log(filter, "filter edit reducer");
+    // return { ...state, carts: filter };
 
     case "ORDER_LIST_AFTER_CHECKOUT":
       console.log("order setelah user checkout");
       return { ...state, orders: action.payload.data };
+
+    case "REMOVE_FROM_CARTS":
+      let newStateCarts = [];
+      console.log("remove from carts");
+      let filterData = state.carts.map((product) => {
+        if (product.ProductId !== action.payload.ProductId) {
+          newStateCarts.push(product);
+        } else {
+          console.log("ada");
+        }
+        // console.log(newStateCarts, "data baru");
+      });
+      return { ...state, carts: newStateCarts };
+      break;
+
     default:
       return state;
   }

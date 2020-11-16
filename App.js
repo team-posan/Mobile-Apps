@@ -18,6 +18,7 @@ const Stack = createStackNavigator();
 
 Stack.Navigator.defaultProps = {
   headerMode: "none",
+  initialRouteName: "Landing",
 };
 
 export default function App() {

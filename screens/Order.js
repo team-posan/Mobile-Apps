@@ -16,76 +16,66 @@ import {
 } from "react-native";
 import { Divider } from "react-native-elements";
 import image from "../assets/backgroundOrder.jpg";
-import { fetchOrdersCarts } from "../store/actions/storeActions";
+import {
+  removeCartById,
+  editCartBeforeCheckout,
+  checkout,
+} from "../store/actions/storeActions";
 
 export default function Order(props) {
   // modals
   const [modalVisible, setModalVisible] = useState(false);
   const [newQuantity, setNewQuantity] = useState(0);
+  const [ProductIdEdited, setProductId] = useState(0);
 
+  // bills
+  const { itemQuantity, total } = props.route.params;
+  const [bills, setBills] = useState(total);
+  const [newBils, setNewBils] = useState(total);
+  const [quantity, setQuantity] = useState(0);
   // state
-  const { access, orders } = useSelector((state) => state);
+  const { access, carts } = useSelector((state) => state);
   const dispatch = useDispatch();
-  const dummy = [
-    {
-      id: 1,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 2,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 3,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 4,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 5,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 6,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 7,
-      title: "Store A",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-  ];
 
   useEffect(() => {
-    dispatch(fetchOrdersCarts(access));
-  }, []);
+    console.log("watching carts data");
+  }, [carts]);
 
-  const { itemQuantity, total } = props.route.params;
+  function showModals(ProductId, price, quantity) {
+    console.log(ProductId, "selected product", price);
+    setProductId(ProductId);
+    setBills(price);
+    setQuantity(quantity);
+    console.log("ini item quantity", quantity);
+    setModalVisible(true);
+  }
 
-  function goToPayment() {
-    console.log("navigate to checkout page");
+  function editQuantity(newQuantity) {
+    dispatch(editCartBeforeCheckout(newQuantity, ProductIdEdited));
+    let changeBills = bills * quantity;
+    setNewBils(total + changeBills);
+    setModalVisible(!modalVisible);
+  }
+
+  function removeFromCarts(price) {
+    console.log("remove form carts", ProductIdEdited);
+    dispatch(removeCartById(ProductIdEdited));
+    setModalVisible(!modalVisible);
+    let changeBills = bills * quantity;
+    setNewBils(total - changeBills);
+  }
+
+  function checkoutHandler() {
+    console.log("masuk checkout hanclder");
+    console.log(carts);
+    let filteredData = carts.map((item) => {
+      return {
+        ProductId: item.ProductId,
+        quantity: item.quantity,
+        payment_status: item.payment_status,
+      };
+    });
+    dispatch(checkout(filteredData, access));
     props.navigation.navigate("Payment");
   }
 
@@ -115,7 +105,7 @@ export default function Order(props) {
             }}
           >
             <Text style={{ fontSize: 12 }}>Sub Total</Text>
-            <Text style={{ fontSize: 12 }}>Rp.{total}</Text>
+            <Text style={{ fontSize: 12 }}>Rp.{newBils}</Text>
           </View>
         </View>
         <View style={styles.bill}>
@@ -146,7 +136,7 @@ export default function Order(props) {
             >
               <Text style={{ fontSize: 15, fontWeight: "bold" }}>Totals</Text>
               <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-                Rp.{total + 3500}
+                Rp.{newBils + 3500}
               </Text>
             </View>
           </Divider>
@@ -165,7 +155,6 @@ export default function Order(props) {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>Edit quantity</Text>
-              <Text>{newQuantity}</Text>
 
               <TextInput
                 style={styles.input}
@@ -179,7 +168,7 @@ export default function Order(props) {
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
                 onPress={() => {
-                  setModalVisible(!modalVisible);
+                  editQuantity(newQuantity);
                 }}
               >
                 <Text style={styles.textStyle}>Submit</Text>
@@ -187,9 +176,7 @@ export default function Order(props) {
 
               <TouchableHighlight
                 style={{ ...styles.removeButton, backgroundColor: "#2196F3" }}
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}
+                onPress={removeFromCarts}
               >
                 <Text style={styles.textStyle}>Remove</Text>
               </TouchableHighlight>
@@ -213,46 +200,51 @@ export default function Order(props) {
           Order Items
         </Text>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text>{JSON.stringify(orders)}</Text>
+          {/* <Text>{JSON.stringify(carts)}</Text> */}
           <View>
-            {orders.carts.map((item) => {
-              return (
-                <TouchableOpacity
-                  style={styles.card}
-                  key={item.id}
-                  onPress={() => {
-                    setModalVisible(true);
-                  }}
-                >
-                  <Image
-                    style={styles.image}
-                    source={{
-                      uri:
-                        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                    }}
-                  />
-                  <View style={styles.innerTextCards}>
-                    <Text h4>Product ID : {item.ProductId}</Text>
-                    <Text>quantity : {item.quantity}</Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
+            {carts
+              ? carts.map((item, index) => {
+                  return (
+                    <TouchableOpacity
+                      style={styles.card}
+                      key={index}
+                      onPress={() => {
+                        showModals(item.ProductId, item.price, item.quantity);
+                      }}
+                    >
+                      <Image
+                        style={styles.image}
+                        source={{ uri: item.Product.image_url }}
+                      />
+                      <View style={styles.innerTextCards}>
+                        <Text h4 style={{ fontWeight: "bold" }}>
+                          {item.Product.product_name}
+                        </Text>
+                        <Text>Rp.{item.price}</Text>
+                        <Text>Qty : {item.quantity}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })
+              : null}
           </View>
         </ScrollView>
       </View>
 
-      <TouchableHighlight style={styles.rightBottomBar} onPress={goToPayment}>
+      <TouchableHighlight
+        style={styles.rightBottomBar}
+        onPress={checkoutHandler}
+      >
         <View style={styles.checkoutBtn}>
           <Text style={{ fontWeight: "bold", fontSize: 16, color: "#fff" }}>
-            Process Checkout
+            Process Checkouts
           </Text>
         </View>
       </TouchableHighlight>
       <Button
-        title="Proccess Checkout"
+        title="Proccess Checkout x"
         style={{ marginTop: 200 }}
-        onPress={goToPayment}
+        onPress={checkoutHandler}
         color="red"
       />
     </View>
@@ -287,7 +279,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   boxBill: {
-    flex:0.5,
+    flex: 0.5,
     width: 300,
     height: 120,
     backgroundColor: "#fff",
@@ -309,7 +301,7 @@ const styles = StyleSheet.create({
     width: 300,
     backgroundColor: "#fff",
     left: 50,
-    top:-100,
+    top: -100,
     borderRadius: 20,
     shadowColor: "#000",
     shadowOffset: {
@@ -411,6 +403,7 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+    fontWeight: "bold",
   },
   // modals
   centeredView: {

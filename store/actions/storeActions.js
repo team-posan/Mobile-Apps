@@ -73,12 +73,17 @@ export const addToCarts = (productsAdd) => {
   };
 };
 
-export const editCartBeforeCheckout = () => {
-  return (dispatch) => {
+export const editCartBeforeCheckout = (newQuantity, ProductIdEdited) => {
+  return (dispatch, getState) => {
+    console.log("masuk edit cart actions");
+    let isExist = getState().carts.filter(
+      (product) => product.ProductId === ProductIdEdited
+    );
     dispatch({
       type: "EDIT_CARTS_QTY",
-      payload: { quantity },
+      payload: { newQuantity, ProductIdEdited },
     });
+    // console.log("masuk edit carts", newQuantity, ProductIdEdited);
   };
 };
 
@@ -119,6 +124,7 @@ export const filterProduct = (ProductId) => {
 
 export const checkout = (carts, access) => {
   return () => {
+    console.log("masuk action checkout action,");
     fetch(`http://localhost:5000/carts`, {
       method: "POST",
       headers: {
@@ -155,3 +161,30 @@ export const fetchOrdersCarts = (access) => {
       .catch((err) => console.log(err, "error while fetch cart order"));
   };
 };
+
+export const removeCartById = (ProductId) => {
+  console.log('masuk delete from carts', ProductId)
+  return (dispatch) => {
+    dispatch({
+      type: "REMOVE_FROM_CARTS",
+      payload: { ProductId },
+    });
+  };
+};
+
+//bulk daelete all carts
+export const removeAllCarts = (ProductId, access) => {
+  return (dispatch) => {
+    fetch(`http://localhost:5000/carts`, {
+      method: 'DELETE',
+      headers: {
+        access: access.access
+      }
+    })
+      .then((resp) => resp.json())
+      .then(data => {
+      console.log('success remove form carts', data)
+      })
+    .catch( err  => console.log(err, 'err while remove data form carts'))
+  }
+}

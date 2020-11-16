@@ -39,7 +39,7 @@ export default function Store(props) {
     console.log("navigate to checkout page");
     props.navigation.navigate("Order", {
       itemQuantity: itemQuantity,
-      total: total
+      total: total,
     });
   }
 
@@ -53,14 +53,17 @@ export default function Store(props) {
       dispatch(addToCarts(product));
     } else {
       console.log("ini tambahin qty ");
-      dispatch(editCartQty(product.ProductId, access));
+      // dispatch(editCartQty(product.ProductId, access));
     }
   }
 
   function checkoutCarts() {
     if (carts.length > 0) {
-      dispatch(checkout(carts, access));
+      // dispatch(checkout(carts, access));
+      // console.log("masuk");
       goToCheckout();
+      setTotal(0);
+      setItemQuantity(0);
     } else {
       console.log("cart empty");
     }
@@ -157,9 +160,10 @@ export default function Store(props) {
                 onPress={() =>
                   cartHandler({
                     ProductId: item.id,
-                    quantity: item.stock,
+                    quantity: 1,
                     payment_status: "unpaid",
                     price: item.price,
+                    Product: item,
                   })
                 }
               >

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet, View, Button, TextInput } from "react-native";
 import { Text } from "react-native-elements";
 import { loginCustomer } from "../store/actions/storeActions";
+import { acc } from "react-native-reanimated";
 
 // import LottieView from "lottie-react-native";
 
@@ -20,6 +21,10 @@ export default function FirstPage(props) {
   useEffect(() => {
     if (access) {
       goToHomePage();
+      console.log(access, "<<< access");
+    } else {
+      // props.navigate.replace("Landing");
+      console.log("back to homepage");
     }
   }, [access]);
 
