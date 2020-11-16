@@ -2,7 +2,7 @@ export const FETCH_STORE_DATA = "FETCH_STORE_DATA";
 export const FETCH_PRODUCTS_DATA = "FETCH_PRODUCTS_DATA";
 export const ADD_TO_CARTS = "ADD_TO_CARTS";
 import JWT from "expo-jwt";
-import { Platform } from "react-native";
+import { Linking, Platform } from "react-native";
 const scrt = 'POSAN'
 
 export const baseUrl =
@@ -29,16 +29,25 @@ export const loginCustomer = (phoneNumber) => {
   };
 };
 
-export const paymentServices = (idToPay) => {
+export const paymentServices = (idToPay, amount) => {
+  console.log(idToPay, amount, 'paymentServices top')
+
   const payCode = JWT.encode({
-    amount: 30000,
-    order_id: [152,153,154]
+    amount: amount,
+    data_id: idToPay
   }, scrt)
+  console.log(payCode, 'paymentServices bottom')
   return (dispatch) => {
     fetch(`http://localhost:5000/midtrans?pay=${payCode}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log('dari payementServices', data)
+        // console.log('dari payementServices', data)
+        dispatch({
+          type: 'SET_STATUS_PAYMENT',
+          payload: data.statusUrl
+        })
+        Linking.openURL(data.deeplinkUrl)
+        
       })
       .catch((err) => console.log(err));
   }
