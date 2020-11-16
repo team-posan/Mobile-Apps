@@ -153,39 +153,47 @@ export const checkout = (carts, access) => {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log('to-reducer', data)
+        console.log("success added to database", data);
         dispatch({
-          type: 'CHECKOUT',
+          type: "CHECKOUT_TO_PAYMENT_ACTION",
           payload: data
         })
-        console.log("success added to database");
+// =======
+//         console.log('to-reducer', data)
+//         dispatch({
+//           type: 'CHECKOUT',
+//           payload: data
+//         })
+//         console.log("success added to database");
+// >>>>>>> layout
       })
       .catch((err) => console.log(err));
   };
 };
 
-export const fetchOrdersCarts = (access) => {
-  return (dispatch) => {
-    fetch(`http://localhost:5000/carts`, {
-      method: "GET",
-      headers: {
-        // "Content-Type": "application/json",
-        access: access.access,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        dispatch({
-          type: "ORDER_LIST_AFTER_CHECKOUT",
-          payload: { data },
-        });
-      })
-      .catch((err) => console.log(err, "error while fetch cart order"));
-  };
-};
+// export const fetchOrdersCarts = (access) => {
+//   return (dispatch) => {
+//     console.log("masuk fetch carts");
+//     fetch(`http://localhost:5000/carts`, {
+//       method: "GET",
+//       headers: {
+//         // "Content-Type": "application/json",
+//         access: access.access,
+//       },
+//     })
+//       .then((res) => res.json())
+//       .then((data) => {
+//         dispatch({
+//           type: "ORDER_LIST_AFTER_CHECKOUT",
+//           payload: { data },
+//         });
+//       })
+//       .catch((err) => console.log(err, "error while fetch cart order"));
+//   };
+// };
 
 export const removeCartById = (ProductId) => {
-  console.log('masuk delete from carts', ProductId)
+  console.log("masuk delete from carts", ProductId);
   return (dispatch) => {
     dispatch({
       type: "REMOVE_FROM_CARTS",
@@ -198,15 +206,33 @@ export const removeCartById = (ProductId) => {
 export const removeAllCarts = (ProductId, access) => {
   return (dispatch) => {
     fetch(`http://localhost:5000/carts`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        access: access.access
-      }
+        access: access.access,
+      },
     })
       .then((resp) => resp.json())
-      .then(data => {
-      console.log('success remove form carts', data)
+      .then((data) => {
+        console.log("success remove form carts", data);
       })
-    .catch( err  => console.log(err, 'err while remove data form carts'))
-  }
-}
+      .catch((err) => console.log(err, "err while remove data form carts"));
+  };
+};
+
+export const paymentBills = (bills, amount) => {
+  return (dispatch) => {
+    dispatch({
+      type: "PAYMENT_BILLS",
+      payload: { bills, amount },
+    });
+  };
+};
+
+export const doneTrasaction = () => {
+  return (dispatch) => {
+    console.log("masuk done transaction");
+    dispatch({
+      type: "DONE_TRANSACTIONS",
+    });
+  };
+};

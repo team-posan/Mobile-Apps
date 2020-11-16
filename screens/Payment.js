@@ -1,22 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Button, TouchableOpacity } from "react-native";
 import { Text } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
-import { paymentServices } from '../store/actions/storeActions'
+import { checkout } from "../store/actions/storeActions";
 
 // import LottieView from "lottie-react-native";
 
 export default function Payment(props) {
-  const [ idToPay, setIdToPay ] = useState([])
-  const { orders, access } = useSelector((state) => state);
+// <<<<<<< dev-apps
+  const dispatch = useDispatch();
+  const { paymentBills, amount, orders, access } = useSelector(
+    (state) => state
+  );
+
+  const [idToPayment, setIdToPayment] = useState([]);
+
+  // useEffect(() => {
+  //   // dispatch(checkout(access));
+  //   console.log(access,' ini access dari payment');
+  // }, []);
 
   useEffect(() => {
-    const filterId = orders.map(cart => cart.id)
-    setIdToPay(filterId)
-    // console.log('dari payment')
-  }, [orders])
+    console.log(orders, "ini yang dicari");
+    if (orders) {
+      let idCartsFilter = orders.map((item) => {
+        return item.id;
+      });
+      setIdToPayment(idCartsFilter);
+      console.log(idCartsFilter);
+    }
+  }, [orders]);
+//   const [ idToPay, setIdToPay ] = useState([])
+//   const { orders, access } = useSelector((state) => state);
 
-  const dispatch = useDispatch()
+//   useEffect(() => {
+//     const filterId = orders.map(cart => cart.id)
+//     setIdToPay(filterId)
+//     // console.log('dari payment')
+//   }, [orders])
+
+//   const dispatch = useDispatch()
+// >>>>>>> layout
 
   function goToCompleate() {
     console.log('dari payment', orders)
@@ -27,7 +51,14 @@ export default function Payment(props) {
   return (
     <View style={styles.container}>
       <View style={styles.inputBox}>
-        <Text style={styles.text}>Complete Your Order</Text>
+// <<<<<<< dev-apps
+        <Text style={styles.text}>Compleate Your Order</Text>
+        <Text> payment bills {paymentBills}</Text>
+        <Text> amount {amount}</Text>
+        <Text style={{ marginTop: 50 }}>{JSON.stringify(idToPayment)}</Text>
+// =======
+//         <Text style={styles.text}>Complete Your Order</Text>
+// >>>>>>> layout
       </View>
 
       <TouchableOpacity style={styles.rightBottomBar} onPress={goToCompleate}>

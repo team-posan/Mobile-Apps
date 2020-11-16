@@ -3,7 +3,12 @@ const initialState = {
   dataProducts: [],
   carts: [],
   access: [],
-  orders: []
+  orders: [],
+  paymentBills: 0,
+  amount: 0,
+// =======
+//   orders: []
+// >>>>>>> layout
 };
 
 const reducer = (state = initialState, action) => {
@@ -45,9 +50,9 @@ const reducer = (state = initialState, action) => {
       console.log(filter, "filter edit reducer");
     // return { ...state, carts: filter };
 
-    case "ORDER_LIST_AFTER_CHECKOUT":
+    case "CHECKOUT_TO_PAYMENT_ACTION":
       console.log("order setelah user checkout");
-      return { ...state, orders: action.payload.data };
+      return { ...state, orders: action.payload };
 
     case "REMOVE_FROM_CARTS":
       let newStateCarts = [];
@@ -62,6 +67,18 @@ const reducer = (state = initialState, action) => {
       });
       return { ...state, carts: newStateCarts };
       break;
+
+    case "PAYMENT_BILLS":
+      console.log("masuk payment bills");
+      return {
+        ...state,
+        paymentBills: action.payload.bills,
+        amount: action.payload.amount,
+      };
+
+    case "DONE_TRANSACTIONS":
+      console.log("done tansaction reducer");
+      return { ...state, carts: [], orders: [] };
 
     default:
       return state;

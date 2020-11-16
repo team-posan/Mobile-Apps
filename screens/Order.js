@@ -20,6 +20,7 @@ import {
   removeCartById,
   editCartBeforeCheckout,
   checkout,
+  paymentBills,
 } from "../store/actions/storeActions";
 
 export default function Order(props) {
@@ -30,39 +31,44 @@ export default function Order(props) {
 
   // bills
   const { itemQuantity, total } = props.route.params;
+
   const [bills, setBills] = useState(total);
-  const [newBils, setNewBils] = useState(total);
+  const [itemPrice, setSelectedItemPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
+
+  const [totalItem, setTotalItems] = useState(itemQuantity);
   // state
   const { access, carts } = useSelector((state) => state);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("watching carts data");
+    if (carts.length < 1) {
+      props.navigation.navigate("Store");
+    }
   }, [carts]);
 
   function showModals(ProductId, price, quantity) {
-    console.log(ProductId, "selected product", price);
     setProductId(ProductId);
-    setBills(price);
+    setSelectedItemPrice(price);
     setQuantity(quantity);
-    console.log("ini item quantity", quantity);
     setModalVisible(true);
   }
 
   function editQuantity(newQuantity) {
     dispatch(editCartBeforeCheckout(newQuantity, ProductIdEdited));
-    let changeBills = bills * quantity;
-    setNewBils(total + changeBills);
     setModalVisible(!modalVisible);
+    let selisihQty = newQuantity - quantity;
+    let minusPrice = itemPrice * selisihQty;
+    setBills(minusPrice + bills);
+    setTotalItems(Number(totalItem) + Number(selisihQty));
   }
 
-  function removeFromCarts(price) {
-    console.log("remove form carts", ProductIdEdited);
+  function removeFromCarts() {
     dispatch(removeCartById(ProductIdEdited));
     setModalVisible(!modalVisible);
-    let changeBills = bills * quantity;
-    setNewBils(total - changeBills);
+    let minusPrice = itemPrice * quantity;
+    setBills(bills - minusPrice);
+    setTotalItems(totalItem - quantity);
   }
 
   function checkoutHandler() {
@@ -74,11 +80,8 @@ export default function Order(props) {
       };
     });
     dispatch(checkout(filteredData, access));
-    const itemId = carts.map(cart => cart.id)
-    console.log("masuk checkout hanclder", carts, itemId);
-    props.navigation.navigate("Payment", {
-      itemId: itemId
-    });
+    dispatch(paymentBills(bills, totalItem));
+    props.navigation.navigate("Payment");
   }
 
   return (
@@ -107,7 +110,7 @@ export default function Order(props) {
             }}
           >
             <Text style={{ fontSize: 12 }}>Sub Total</Text>
-            <Text style={{ fontSize: 12 }}>Rp.{newBils}</Text>
+            <Text style={{ fontSize: 12 }}>Rp.{bills}</Text>
           </View>
         </View>
         <View style={styles.bill}>
@@ -120,8 +123,8 @@ export default function Order(props) {
               //   backgroundColor: "black",
             }}
           >
-            <Text style={{ fontSize: 12 }}>Tax</Text>
-            <Text style={{ fontSize: 12 }}>Rp.3.500</Text>
+            <Text style={{ fontSize: 12 }}>Total items</Text>
+            <Text style={{ fontSize: 12 }}>{totalItem}</Text>
           </View>
         </View>
 
@@ -138,7 +141,7 @@ export default function Order(props) {
             >
               <Text style={{ fontSize: 15, fontWeight: "bold" }}>Totals</Text>
               <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-                Rp.{newBils + 3500}
+                Rp.{bills}
               </Text>
             </View>
           </Divider>
@@ -163,7 +166,7 @@ export default function Order(props) {
                 keyboardType="numeric"
                 onChangeText={(e) => setNewQuantity(e)}
                 placeholder="insert quantity"
-                maxLength={1}
+                maxLength={2}
                 minLength={0}
               />
 
@@ -202,7 +205,6 @@ export default function Order(props) {
           Order Items
         </Text>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* <Text>{JSON.stringify(carts)}</Text> */}
           <View>
             {carts
               ? carts.map((item, index) => {

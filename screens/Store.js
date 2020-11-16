@@ -7,15 +7,12 @@ import {
   Image,
   Dimensions,
   FlatList,
-  Button,
 } from "react-native";
 import { Text } from "react-native-elements";
 import {
   fetchProducts,
   addToCarts,
-  checkout,
   filterProduct,
-  editCartQty,
 } from "../store/actions/storeActions";
 
 export default function Store(props) {
@@ -44,11 +41,11 @@ export default function Store(props) {
   }
 
   function cartHandler(product) {
-    setTotal(total + product.price);
-    setItemQuantity(itemQuantity + 1);
     let checkOnCarts = dispatch(filterProduct(product.ProductId));
     console.log(checkOnCarts);
     if (!checkOnCarts) {
+      setTotal(total + product.price);
+      setItemQuantity(itemQuantity + 1);
       const { ProductId, quantity, payment_status } = product;
       dispatch(addToCarts(product));
     } else {

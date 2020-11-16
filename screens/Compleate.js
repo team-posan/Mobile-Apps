@@ -2,32 +2,36 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import { Text } from "react-native-elements";
 import { QRCode } from "react-native-custom-qr-codes-expo";
-import { fetchOrdersCarts } from "../store/actions/storeActions";
 import { useDispatch, useSelector } from "react-redux";
-
+import {
+  fetchOrdersCarts,
+  doneTrasaction,
+} from "../store/actions/storeActions";
 // import LottieView from "lottie-react-native";
 // arr number id
 
 export default function Compleate(props) {
-  const dipatch = useDispatch();
+  const dispatch = useDispatch();
   const { orders, access } = useSelector((state) => state);
   const [qrData, setQrData] = useState();
 
-  useEffect(() => {
-    dipatch(fetchOrdersCarts(access));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchOrdersCarts(access));
+  // }, []);
 
   function goToHomePage() {
+    dispatch(doneTrasaction());
     props.navigation.navigate("HomePage");
   }
 
   const filterCart = () => {
     let dataId;
-    if (orders.carts) {
-      dataId = orders.carts.map((val) => {
+    if (orders) {
+      dataId = orders.map((val) => {
         return val.id;
       });
     }
+    // console.log(orders, "ini yang dicari");
     return JSON.stringify(dataId);
   };
 
@@ -40,11 +44,9 @@ export default function Compleate(props) {
         {/* <Text> carts : {JSON.stringify(orders.carts)}</Text> */}
         <Text style={styles.text}>Thanks for your order</Text>
       </View>
-      { orders.carts
-        ? <QRCode content={filterCart()} size={200} /> 
-        : <></>
-        // console.log('dari order', orders)
-      }
+
+      {orders ? <QRCode content={filterCart()} size={200} /> : null}
+
       <Text>{qrData}</Text>
       <TouchableOpacity style={styles.rightBottomBar} onPress={goToHomePage}>
         <View style={styles.checkoutBtn}>
