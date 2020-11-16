@@ -2,23 +2,28 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Button, TouchableOpacity } from "react-native";
 import { Text } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
-import { checkout } from "../store/actions/storeActions";
+import { checkout, paymentServices } from "../store/actions/storeActions";
+import axios from 'axios'
 
 // import LottieView from "lottie-react-native";
 
 export default function Payment(props) {
 // <<<<<<< dev-apps
+  const [ cekStatusUrl, setCekStatusUrl ] = useState('')
+  const [ statusPay, setStatusPay ] = useState('')
+
   const dispatch = useDispatch();
-  const { paymentBills, amount, orders, access } = useSelector(
+  const { paymentBills, amount, orders, payment } = useSelector(
     (state) => state
   );
 
   const [idToPayment, setIdToPayment] = useState([]);
 
-  // useEffect(() => {
-  //   // dispatch(checkout(access));
-  //   console.log(access,' ini access dari payment');
-  // }, []);
+  useEffect(() => {
+    console.log(payment.statusUrl, '??????')
+  }, [payment]);
+
+  const [cekLink, setCekLink ] = useState('testing')
 
   useEffect(() => {
     console.log(orders, "ini yang dicari");
@@ -27,7 +32,7 @@ export default function Payment(props) {
         return item.id;
       });
       setIdToPayment(idCartsFilter);
-      console.log(idCartsFilter);
+      console.log(idCartsFilter, '>>>>');
     }
   }, [orders]);
 //   const [ idToPay, setIdToPay ] = useState([])
@@ -43,22 +48,39 @@ export default function Payment(props) {
 // >>>>>>> layout
 
   function goToCompleate() {
-    console.log('dari payment', orders)
-    dispatch(paymentServices(idToPay))
-    props.navigation.navigate("Compleate");
+    // console.log('dari payment', orders)
+    dispatch(paymentServices(idToPayment, paymentBills))
+    // cekStatusUrl()
+    // .then(test => {console.log(test)})
+    // props.navigation.navigate("Compleate");
+  }
+
+  const request = () => {
+    axios.get(`${payment.statusUrl}`,{
+      headers:{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Basic U0ItTWlkLXNlcnZlci1nZmN5RnBDMC15N1B6T2FoVG9Ta2s0eUw6'
+      }
+    })
+      .then(result=>{
+        console.log(result.data,'asu')
+      })
+      .catch(err=>{
+        console.log(err)
+      })
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.inputBox}>
-// <<<<<<< dev-apps
         <Text style={styles.text}>Compleate Your Order</Text>
         <Text> payment bills {paymentBills}</Text>
         <Text> amount {amount}</Text>
         <Text style={{ marginTop: 50 }}>{JSON.stringify(idToPayment)}</Text>
-// =======
-//         <Text style={styles.text}>Complete Your Order</Text>
-// >>>>>>> layout
+
+         {/* <Text style={styles.text}>Complete Your Order</Text> */}
+
       </View>
 
       <TouchableOpacity style={styles.rightBottomBar} onPress={goToCompleate}>
@@ -68,6 +90,10 @@ export default function Payment(props) {
           </Text>
         </View>
       </TouchableOpacity>
+      <Button
+        title="request"
+        onPress={request}
+        />
     </View>
   );
 }

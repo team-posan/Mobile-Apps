@@ -6,13 +6,19 @@ const initialState = {
   orders: [],
   paymentBills: 0,
   amount: 0,
-// =======
-//   orders: []
-// >>>>>>> layout
+  payment: {
+    statusUrl: '',
+    status: ''
+  }
 };
 
 const reducer = (state = initialState, action) => {
+  console.log(action, 'from reducer top')
+
   switch (action.type) {
+    case 'SET_STATUS_PAYMENT':
+      return {...state, payment: {...state.payment, statusUrl: action.payload}}
+
     case "USER_LOGIN":
       console.log("user login case reducer");
       console.log(action.payload.access_token);
