@@ -1,19 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Button, TouchableOpacity } from "react-native";
 import { Text } from "react-native-elements";
+import { useDispatch, useSelector } from "react-redux";
+import { paymentServices } from '../store/actions/storeActions'
 
 // import LottieView from "lottie-react-native";
 
 export default function Payment(props) {
+  const [ idToPay, setIdToPay ] = useState([])
+  const { orders, access } = useSelector((state) => state);
+
+  useEffect(() => {
+    const filterId = orders.map(cart => cart.id)
+    setIdToPay(filterId)
+    // console.log('dari payment')
+  }, [orders])
+
+  const dispatch = useDispatch()
 
   function goToCompleate() {
+    console.log('dari payment', orders)
+    dispatch(paymentServices(idToPay))
     props.navigation.navigate("Compleate");
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.inputBox}>
-        <Text style={styles.text}>Compleate Your Order</Text>
+        <Text style={styles.text}>Complete Your Order</Text>
       </View>
 
       <TouchableOpacity style={styles.rightBottomBar} onPress={goToCompleate}>

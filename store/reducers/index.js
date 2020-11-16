@@ -3,7 +3,7 @@ const initialState = {
   dataProducts: [],
   carts: [],
   access: [],
-  orders: [],
+  orders: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -25,6 +25,12 @@ const reducer = (state = initialState, action) => {
       // console.log("add to cart reducer");
       let newCarts = state.carts.concat(action.payload.productsAdd);
       return { ...state, carts: newCarts };
+
+    case "CHECKOUT":
+      // console.log("add to cart reducer");
+      // let newCarts = state.carts.concat(action.payload.productsAdd);
+      // console.log()
+      return { ...state, orders:  action.payload};
 
     case "EDIT_CARTS_QTY":
       console.log("masuuk");
