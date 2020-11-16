@@ -18,15 +18,15 @@ export default function FirstPage(props) {
       phoneNumber: phoneNumber,
     });
   }
-  useEffect(() => {
-    if (access) {
-      goToHomePage();
-      console.log(access, "<<< access");
-    } else {
-      // props.navigate.replace("Landing");
-      console.log("back to homepage");
-    }
-  }, [access]);
+
+  // useEffect(() => {
+  //   if (access.length > 0) {
+  //     goToHomePage();
+  //     console.log(access, "<<< access");
+  //   } else {
+  //     props.navigate.replace("Landing");
+  //   }
+  // }, [access]);
 
   function login() {
     if (!phoneNumber) {
@@ -35,6 +35,7 @@ export default function FirstPage(props) {
       dispatch(loginCustomer(phoneNumber));
       if (access) {
         console.log("success login");
+        goToHomePage();
       } else {
         console.log("login failed");
       }

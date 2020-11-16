@@ -1,10 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Button, TouchableOpacity } from "react-native";
 import { Text } from "react-native-elements";
+import { useDispatch, useSelector } from "react-redux";
+import { checkout } from "../store/actions/storeActions";
 
 // import LottieView from "lottie-react-native";
 
 export default function Payment(props) {
+  const dispatch = useDispatch();
+  const { paymentBills, amount, orders, access } = useSelector(
+    (state) => state
+  );
+
+  const [idToPayment, setIdToPayment] = useState([]);
+
+  // useEffect(() => {
+  //   // dispatch(checkout(access));
+  //   console.log(access,' ini access dari payment');
+  // }, []);
+
+  useEffect(() => {
+    console.log(orders, "ini yang dicari");
+    if (orders) {
+      let idCartsFilter = orders.map((item) => {
+        return item.id;
+      });
+      setIdToPayment(idCartsFilter);
+      console.log(idCartsFilter);
+    }
+  }, [orders]);
 
   function goToCompleate() {
     props.navigation.navigate("Compleate");
@@ -14,6 +38,9 @@ export default function Payment(props) {
     <View style={styles.container}>
       <View style={styles.inputBox}>
         <Text style={styles.text}>Compleate Your Order</Text>
+        <Text> payment bills {paymentBills}</Text>
+        <Text> amount {amount}</Text>
+        <Text style={{ marginTop: 50 }}>{JSON.stringify(idToPayment)}</Text>
       </View>
 
       <TouchableOpacity style={styles.rightBottomBar} onPress={goToCompleate}>
