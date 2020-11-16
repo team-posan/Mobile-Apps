@@ -139,8 +139,8 @@ export const checkout = (carts, access) => {
         console.log("success added to database", data);
         dispatch({
           type: "CHECKOUT_TO_PAYMENT_ACTION",
-          payload: data
-        })
+          payload: data,
+        });
       })
       .catch((err) => console.log(err));
   };

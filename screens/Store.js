@@ -47,7 +47,7 @@ export default function Store(props) {
       setTotal(total + product.price);
       setItemQuantity(itemQuantity + 1);
       const { ProductId, quantity, payment_status } = product;
-      dispatch(addToCarts(product));
+      dispatch(addToCarts(product, access));
     } else {
       console.log("ini tambahin qty ");
       // dispatch(editCartQty(product.ProductId, access));

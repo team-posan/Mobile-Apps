@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet, View, Button, TextInput } from "react-native";
 import { Text } from "react-native-elements";
 import { loginCustomer } from "../store/actions/storeActions";
-import { acc } from "react-native-reanimated";
 
 // import LottieView from "lottie-react-native";
 
@@ -18,15 +17,6 @@ export default function FirstPage(props) {
       phoneNumber: phoneNumber,
     });
   }
-
-  // useEffect(() => {
-  //   if (access.length > 0) {
-  //     goToHomePage();
-  //     console.log(access, "<<< access");
-  //   } else {
-  //     props.navigate.replace("Landing");
-  //   }
-  // }, [access]);
 
   function login() {
     if (!phoneNumber) {
