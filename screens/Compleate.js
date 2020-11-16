@@ -40,7 +40,11 @@ export default function Compleate(props) {
         {/* <Text> carts : {JSON.stringify(orders.carts)}</Text> */}
         <Text style={styles.text}>Thanks for your order</Text>
       </View>
-      {orders.carts ? <QRCode content={filterCart()} size={200} /> : null}
+      { orders.carts
+        ? <QRCode content={filterCart()} size={200} /> 
+        : <></>
+        // console.log('dari order', orders)
+      }
       <Text>{qrData}</Text>
       <TouchableOpacity style={styles.rightBottomBar} onPress={goToHomePage}>
         <View style={styles.checkoutBtn}>
