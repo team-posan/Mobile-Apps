@@ -7,6 +7,7 @@ import { checkout } from "../store/actions/storeActions";
 // import LottieView from "lottie-react-native";
 
 export default function Payment(props) {
+// <<<<<<< dev-apps
   const dispatch = useDispatch();
   const { paymentBills, amount, orders, access } = useSelector(
     (state) => state
@@ -29,18 +30,35 @@ export default function Payment(props) {
       console.log(idCartsFilter);
     }
   }, [orders]);
+//   const [ idToPay, setIdToPay ] = useState([])
+//   const { orders, access } = useSelector((state) => state);
+
+//   useEffect(() => {
+//     const filterId = orders.map(cart => cart.id)
+//     setIdToPay(filterId)
+//     // console.log('dari payment')
+//   }, [orders])
+
+//   const dispatch = useDispatch()
+// >>>>>>> layout
 
   function goToCompleate() {
+    console.log('dari payment', orders)
+    dispatch(paymentServices(idToPay))
     props.navigation.navigate("Compleate");
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.inputBox}>
+// <<<<<<< dev-apps
         <Text style={styles.text}>Compleate Your Order</Text>
         <Text> payment bills {paymentBills}</Text>
         <Text> amount {amount}</Text>
         <Text style={{ marginTop: 50 }}>{JSON.stringify(idToPayment)}</Text>
+// =======
+//         <Text style={styles.text}>Complete Your Order</Text>
+// >>>>>>> layout
       </View>
 
       <TouchableOpacity style={styles.rightBottomBar} onPress={goToCompleate}>

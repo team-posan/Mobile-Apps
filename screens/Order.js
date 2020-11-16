@@ -72,8 +72,6 @@ export default function Order(props) {
   }
 
   function checkoutHandler() {
-    console.log("masuk checkout hanclder");
-    console.log(carts);
     let filteredData = carts.map((item) => {
       return {
         ProductId: item.ProductId,

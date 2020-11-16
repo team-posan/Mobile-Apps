@@ -1,7 +1,9 @@
 export const FETCH_STORE_DATA = "FETCH_STORE_DATA";
 export const FETCH_PRODUCTS_DATA = "FETCH_PRODUCTS_DATA";
 export const ADD_TO_CARTS = "ADD_TO_CARTS";
+import JWT from "expo-jwt";
 import { Platform } from "react-native";
+const scrt = 'POSAN'
 
 export const baseUrl =
   Platform.OS === "android" ? "125.161.139.121:5000/" : "125.161.139.121:5000/";
@@ -26,6 +28,21 @@ export const loginCustomer = (phoneNumber) => {
       .catch((err) => console.log(err));
   };
 };
+
+export const paymentServices = (idToPay) => {
+  const payCode = JWT.encode({
+    amount: 30000,
+    order_id: [152,153,154]
+  }, scrt)
+  return (dispatch) => {
+    fetch(`http://localhost:5000/midtrans?pay=${payCode}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('dari payementServices', data)
+      })
+      .catch((err) => console.log(err));
+  }
+}
 
 export const fetchStore = () => {
   console.log(Platform.OS);
@@ -141,6 +158,14 @@ export const checkout = (carts, access) => {
           type: "CHECKOUT_TO_PAYMENT_ACTION",
           payload: data
         })
+// =======
+//         console.log('to-reducer', data)
+//         dispatch({
+//           type: 'CHECKOUT',
+//           payload: data
+//         })
+//         console.log("success added to database");
+// >>>>>>> layout
       })
       .catch((err) => console.log(err));
   };
