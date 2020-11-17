@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet, View, Button, TextInput } from "react-native";
 import { Text } from "react-native-elements";
+import undraw_mobile_user_7oqo from '../assets/undraw_mobile_user_7oqo'
 
 export default function Verify(props) {
   const [inputCode, setVerifyCode] = useState("");
@@ -27,8 +28,9 @@ export default function Verify(props) {
   return (
     <View style={styles.container}>
       <View style={styles.inputBox}>
+        {/* <undraw_mobile_user_7oqo /> */}
         <Text style={styles.text}>
-          VERIFICATION CODE {JSON.stringify(codeVerify)}
+          VERIFICATION CODE {/*JSON.stringify(codeVerify)*/}
         </Text>
         <TextInput
           style={styles.input}

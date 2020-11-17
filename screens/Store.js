@@ -16,6 +16,8 @@ import {
   clearAll,
 } from "../store/actions/storeActions";
 
+const width = Dimensions.get('screen').width
+
 export default function Store(props) {
   const dispatch = useDispatch();
   const [total, setTotal] = useState(0);
@@ -31,7 +33,7 @@ export default function Store(props) {
     setItemQuantity(0);
   }, []);
 
-  const { storeId } = props.route.params;
+  const { storeId, storeName } = props.route.params;
   console.log(storeId);
 
   function goToCheckout() {
@@ -141,14 +143,14 @@ export default function Store(props) {
           Pilih Product
         </Text>
         <Text h5 style={{ fontWeight: "bold", color: "white" }}>
-          Store {storeId}
+          Store {storeName}
         </Text>
       </View>
 
       <View style={styles.productsContainer}>
-        <Text h5 style={{ fontWeight: "bold" }}>
+        {/* <Text h5 style={{ fontWeight: "bold" }}>
           Pilih Product
-        </Text>
+        </Text> */}
         <View>
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -182,7 +184,7 @@ export default function Store(props) {
                       </Text>
                     </View>
                     <View style={styles.quantityProduct}>
-                      <Text style={{ fontWeight: "bold" }}>{item.stock}</Text>
+                      <Text style={{ fontWeight: "bold" }}>Stock: {item.stock}</Text>
                     </View>
                   </View>
                 </View>
@@ -235,24 +237,24 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#C4C4C4",
+    // backgroundColor: "#C4C4C4",
     justifyContent: "space-around",
   },
   header: {
     height: 150,
     backgroundColor: "#1E2749",
-    borderBottomRightRadius: 50,
+    // borderBottomRightRadius: 50,
     borderColor: "white",
     display: "flex",
     justifyContent: "flex-end",
     padding: 30,
-    marginTop: -10,
+    // marginTop: -10,
   },
   productsContainer: {
     left: -10,
-    padding: 20,
+    // padding: 20,
     height: 520,
-    backgroundColor: "#C4C4C4",
+    // backgroundColor: "#C4C4C4",
     display: "flex",
     alignItems: "center",
   },
@@ -272,6 +274,16 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 10,
+
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 1,
+    //   height: 1,
+    // },
+    // shadowOpacity: 0.41,
+    // shadowRadius: 9.11,
+
+    // elevation: 14,
   },
   productTextCard: {
     width: 150,
@@ -294,11 +306,12 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   menuNav: {
-    width: 400,
+    // width: 400,
     height: 50,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: '#fff'
   },
   left: {
     width: 200,
@@ -313,10 +326,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bottomTotalBar: {
-    width: 400,
+    // width: 400,
     height: 60,
     backgroundColor: "#E14C17",
     padding: 10,
+    paddingLeft: 20,
     justifyContent: "space-between",
     flexDirection: "row",
   },
