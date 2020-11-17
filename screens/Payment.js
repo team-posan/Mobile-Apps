@@ -52,15 +52,16 @@ export default function Payment(props) {
     dispatch(paymentServices(idToPayment, paymentBills))
     // cekStatusUrl()
     // .then(test => {console.log(test)})
-    // props.navigation.navigate("Compleate");
+    props.navigation.navigate("Compleate");
   }
 
   const request = () => {
+    console.log(idToPayment,'asdasd')
     axios.get(`${payment.statusUrl}`,{
       headers:{
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Basic U0ItTWlkLXNlcnZlci1nZmN5RnBDMC15N1B6T2FoVG9Ta2s0eUw6'
+        'Authorization': 'Basic U0ItTWlkLXNlcnZlci00QjR5WFZJdjFDODBYbXF0amJlUExtQU06'
       }
     })
       .then(result=>{
@@ -90,10 +91,11 @@ export default function Payment(props) {
           </Text>
         </View>
       </TouchableOpacity>
-      <Button
+      {/* <Button
         title="request"
         onPress={request}
-        />
+        /> */}
+        {/* {request()} */}
     </View>
   );
 }

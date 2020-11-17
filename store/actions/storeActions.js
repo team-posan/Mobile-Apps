@@ -11,7 +11,7 @@ export const baseUrl =
 export const loginCustomer = (phoneNumber) => {
   return (dispatch) => {
     let phone_number = phoneNumber.toString();
-    fetch(`http://localhost:5000/user/customerlogin`, {
+    fetch(`http://10.0.2.2:5000/user/customerlogin`, {
       method: "POST",
       body: JSON.stringify({ phone_number }),
       headers: {
@@ -38,7 +38,7 @@ export const paymentServices = (idToPay, amount) => {
   }, scrt)
   console.log(payCode, 'paymentServices bottom')
   return (dispatch) => {
-    fetch(`http://localhost:5000/midtrans?pay=${payCode}`)
+    fetch(`http://10.0.2.2:5000/midtrans?pay=${payCode}`)
       .then((res) => res.json())
       .then((data) => {
         // console.log('dari payementServices', data)
@@ -56,7 +56,7 @@ export const paymentServices = (idToPay, amount) => {
 export const fetchStore = () => {
   console.log(Platform.OS);
   return (dispatch) => {
-    fetch(`http://localhost:5000/store`)
+    fetch(`http://10.0.2.2:5000/store`)
       .then((res) => res.json())
       .then((store) => {
         dispatch({
@@ -70,7 +70,7 @@ export const fetchStore = () => {
 
 export const fetchProducts = (storeId, access) => {
   return (dispatch) => {
-    fetch(`http://localhost:5000/product?store=${storeId}`, {
+    fetch(`http://10.0.2.2:5000/product?store=${storeId}`, {
       method: "GET",
       headers: {
         // "Content-Type": "application/json",
@@ -116,7 +116,7 @@ export const editCartBeforeCheckout = (newQuantity, ProductIdEdited) => {
 // cara dapet params >>>> edit setelah checkout
 export const editCartQty = (ProductId, access) => {
   return (dispatch) => {
-    fetch(`http://localhost:5000/carts/317`, {
+    fetch(`http://10.0.2.2:5000/carts/317`, {
       method: "PUT",
       headers: {
         Accept: "application/json",
@@ -150,8 +150,8 @@ export const filterProduct = (ProductId) => {
 
 export const checkout = (carts, access) => {
   return (dispatch) => {
-    console.log("masuk action checkout action,");
-    fetch(`http://localhost:5000/carts`, {
+    console.log("masuk action checkout action,", carts);
+    fetch(`http://10.0.2.2:5000/carts`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -167,14 +167,6 @@ export const checkout = (carts, access) => {
           type: "CHECKOUT_TO_PAYMENT_ACTION",
           payload: data
         })
-// =======
-//         console.log('to-reducer', data)
-//         dispatch({
-//           type: 'CHECKOUT',
-//           payload: data
-//         })
-//         console.log("success added to database");
-// >>>>>>> layout
       })
       .catch((err) => console.log(err));
   };
@@ -183,7 +175,7 @@ export const checkout = (carts, access) => {
 // export const fetchOrdersCarts = (access) => {
 //   return (dispatch) => {
 //     console.log("masuk fetch carts");
-//     fetch(`http://localhost:5000/carts`, {
+//     fetch(`http://10.0.2.2:5000/carts`, {
 //       method: "GET",
 //       headers: {
 //         // "Content-Type": "application/json",
@@ -214,7 +206,7 @@ export const removeCartById = (ProductId) => {
 //bulk daelete all carts
 export const removeAllCarts = (ProductId, access) => {
   return (dispatch) => {
-    fetch(`http://localhost:5000/carts`, {
+    fetch(`http://10.0.2.2:5000/carts`, {
       method: "DELETE",
       headers: {
         access: access.access,
