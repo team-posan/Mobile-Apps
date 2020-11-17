@@ -51,8 +51,8 @@ const reducer = (state = initialState, action) => {
           return (state.carts[index] = product);
         }
       });
-      console.log(filter, "filter edit reducer");
-    // return { ...state, carts: filter };
+      // console.log(filter, "filter edit reducer");
+    return { ...state, orders: filter };
 
     case "CHECKOUT_TO_PAYMENT_ACTION":
       console.log("order setelah user checkout", action.payload);

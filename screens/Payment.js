@@ -52,7 +52,9 @@ export default function Payment(props) {
     dispatch(paymentServices(idToPayment, paymentBills))
     // cekStatusUrl()
     // .then(test => {console.log(test)})
-    props.navigation.navigate("Compleate");
+    setTimeout(() => {
+      props.navigation.navigate("Compleate");
+    }, 3000)
   }
 
   const request = () => {
