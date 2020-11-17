@@ -6,12 +6,21 @@ const initialState = {
   orders: [],
   paymentBills: 0,
   amount: 0,
+
   codeVerify: "",
   history: [],
+
+  payment: {
+    statusUrl: '',
+    status: ''
+  }
+
 };
 
 const reducer = (state = initialState, action) => {
+
   switch (action.type) {
+
     case "NEW_USER_LOGIN":
       console.log(">>> new user login with verification <<<");
       console.log(action.payload.access_token, "payload.access");
@@ -21,6 +30,10 @@ const reducer = (state = initialState, action) => {
         access: action.payload.access_token,
         codeVerify: action.payload.codeVerification,
       };
+
+    case 'SET_STATUS_PAYMENT':
+      return {...state, payment: {...state.payment, statusUrl: action.payload}}
+
 
     case "USER_LOGIN":
       console.log(">>> user login <<<");
@@ -37,6 +50,11 @@ const reducer = (state = initialState, action) => {
       let newCarts = state.carts.concat(action.payload.productsAdd);
       return { ...state, carts: newCarts };
 
+    case "CHECKOUT":
+      // let newCarts = state.carts.concat(action.payload.productsAdd);
+      // console.log()
+      return { ...state, orders:  action.payload};
+
     case "EDIT_CARTS_QTY":
       console.log(">>>>>> masuuk edit carts qty <<<<<<");
       let filter = state.orders.map((product, index) => {
@@ -49,6 +67,7 @@ const reducer = (state = initialState, action) => {
       return { ...state, orders: filter };
 
     case "CHECKOUT_TO_PAYMENT_ACTION":
+
       return { ...state, orders: action.payload };
 
     case "REMOVE_FROM_CARTS":

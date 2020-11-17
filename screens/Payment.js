@@ -3,18 +3,27 @@ import { StyleSheet, View, Button, TouchableOpacity } from "react-native";
 import { Text } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
 
+import { checkout, paymentServices } from "../store/actions/storeActions";
+import axios from 'axios'
+
+
 export default function Payment(props) {
+// <<<<<<< dev-apps
+  const [ cekStatusUrl, setCekStatusUrl ] = useState('')
+  const [ statusPay, setStatusPay ] = useState('')
+
   const dispatch = useDispatch();
-  const { paymentBills, amount, orders, access } = useSelector(
+  const { paymentBills, amount, orders, payment } = useSelector(
     (state) => state
   );
 
   const [idToPayment, setIdToPayment] = useState([]);
 
-  // useEffect(() => {
-  //   // dispatch(checkout(access));
-  //   console.log(access,' ini access dari payment');
-  // }, []);
+  useEffect(() => {
+    console.log(payment.statusUrl, '??????')
+  }, [payment]);
+
+  const [cekLink, setCekLink ] = useState('testing')
 
   useEffect(() => {
     console.log(orders, "ini yang dicari");
@@ -23,12 +32,44 @@ export default function Payment(props) {
         return item.id;
       });
       setIdToPayment(idCartsFilter);
-      console.log(idCartsFilter);
+      console.log(idCartsFilter, '>>>>');
     }
   }, [orders]);
+//   const [ idToPay, setIdToPay ] = useState([])
+//   const { orders, access } = useSelector((state) => state);
+
+//   useEffect(() => {
+//     const filterId = orders.map(cart => cart.id)
+//     setIdToPay(filterId)
+//     // console.log('dari payment')
+//   }, [orders])
+
+//   const dispatch = useDispatch()
+// >>>>>>> layout
 
   function goToCompleate() {
+    // console.log('dari payment', orders)
+    dispatch(paymentServices(idToPayment, paymentBills))
+    // cekStatusUrl()
+    // .then(test => {console.log(test)})
     props.navigation.navigate("Compleate");
+  }
+
+  const request = () => {
+    console.log(idToPayment,'asdasd')
+    axios.get(`${payment.statusUrl}`,{
+      headers:{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Basic U0ItTWlkLXNlcnZlci00QjR5WFZJdjFDODBYbXF0amJlUExtQU06'
+      }
+    })
+      .then(result=>{
+        console.log(result.data,'asu')
+      })
+      .catch(err=>{
+        console.log(err)
+      })
   }
 
   return (
@@ -39,6 +80,9 @@ export default function Payment(props) {
         <Text style={{ marginTop: 300 }}>{amount}</Text>
         {/* <Text> amount {JSON.stringify(orders)}</Text> */}
         <Text style={{ marginTop: 50 }}>{JSON.stringify(idToPayment)}</Text>
+
+         {/* <Text style={styles.text}>Complete Your Order</Text> */}
+
       </View>
 
       <TouchableOpacity style={styles.rightBottomBar} onPress={goToCompleate}>
@@ -48,6 +92,11 @@ export default function Payment(props) {
           </Text>
         </View>
       </TouchableOpacity>
+      {/* <Button
+        title="request"
+        onPress={request}
+        /> */}
+        {/* {request()} */}
     </View>
   );
 }
