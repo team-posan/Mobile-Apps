@@ -7,6 +7,7 @@ const initialState = {
   paymentBills: 0,
   amount: 0,
   codeVerify: "",
+  history: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -45,14 +46,6 @@ const reducer = (state = initialState, action) => {
           return (state.orders[index] = product);
         }
       });
-      // let filterCarts = state.carts.map((product, index) => {
-      //   if (product.ProductId == action.payload.ProductIdEdited) {
-      //     return (state.carts[index].quantity = action.payload.newQuantity);
-      //   } else {
-      //     return (state.carts[index] = product);
-      //   }
-      // });
-      // console.log(filter, "filter edit reducer");
       return { ...state, orders: filter };
 
     case "CHECKOUT_TO_PAYMENT_ACTION":
@@ -83,6 +76,9 @@ const reducer = (state = initialState, action) => {
 
     case "CLEAR_ALL_CARTS_ORDER":
       return { ...state, carts: [], orders: [] };
+
+    case "FETCH_CARTS_HISTORY":
+      return { ...state, history: action.payload.cartsHistory };
 
     default:
       return state;

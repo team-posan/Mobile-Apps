@@ -13,6 +13,7 @@ import {
   Modal,
   TouchableHighlight,
   TextInput,
+  BackHandler,
 } from "react-native";
 import { Divider } from "react-native-elements";
 import image from "../assets/backgroundOrder.jpg";
@@ -21,6 +22,7 @@ import {
   editCartBeforeCheckout,
   checkout,
   paymentBills,
+  clearAll,
 } from "../store/actions/storeActions";
 
 export default function Order(props) {
@@ -32,14 +34,30 @@ export default function Order(props) {
 
   // bills
   const { itemQuantity, total } = props.route.params;
-
   const [bills, setBills] = useState(total);
   const [itemPrice, setSelectedItemPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
-
   const [totalItem, setTotalItems] = useState(itemQuantity);
-  // state
-  const { access, carts, orders } = useSelector((state) => state);
+  const { access, carts } = useSelector((state) => state);
+
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert("Hold on!", "This will remove your carts", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel",
+        },
+        { text: "YES", onPress: () => dispatch(clearAll()) },
+      ]);
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+    return () => backHandler.remove();
+  },[]);
 
   useEffect(() => {
     if (carts.length < 1) {

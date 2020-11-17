@@ -97,26 +97,6 @@ export const editCartBeforeCheckout = (newQuantity, ProductIdEdited) => {
   };
 };
 
-// cara dapet params >>>> edit setelah checkout
-// export const editCartQty = (ProductId, access) => {
-//   return (dispatch) => {
-//     fetch(`http://localhost:5000/carts/317`, {
-//       method: "PUT",
-//       headers: {
-//         Accept: "application/json",
-//         "Content-Type": "application/json",
-//         access: access,
-//       },
-//       body: JSON.stringify({ ProductId: ProductId, quantity: 10 }),
-//     })
-//       .then((resp) => resp.json())
-//       .then((data) => {
-//         console.log(data, "success edit data");
-//       })
-//       .catch((err) => console.log(err, "error while edit data"));
-//   };
-// };
-
 export const filterProduct = (ProductId) => {
   return (dispatch, getState) => {
     console.log(ProductId, "<<< untuk difilter");
@@ -134,7 +114,7 @@ export const filterProduct = (ProductId) => {
 
 export const checkout = (carts, access) => {
   return (dispatch) => {
-    console.log(carts, 'ini << carts')
+    console.log(carts, "ini << carts");
     console.log("masuk action checkout action,");
     fetch(`http://localhost:5000/carts`, {
       method: "POST",
@@ -157,26 +137,26 @@ export const checkout = (carts, access) => {
   };
 };
 
-// export const fetchOrdersCarts = (access) => {
-//   return (dispatch) => {
-//     console.log("masuk fetch carts");
-//     fetch(`http://localhost:5000/carts`, {
-//       method: "GET",
-//       headers: {
-//         // "Content-Type": "application/json",
-//         access: access,
-//       },
-//     })
-//       .then((res) => res.json())
-//       .then((data) => {
-//         dispatch({
-//           type: "ORDER_LIST_AFTER_CHECKOUT",
-//           payload: { data },
-//         });
-//       })
-//       .catch((err) => console.log(err, "error while fetch cart order"));
-//   };
-// };
+export const fetchCartsHistory = (access) => {
+  return (dispatch) => {
+    console.log("masuk fetch carts");
+    fetch(`http://localhost:5000/carts`, {
+      method: "GET",
+      headers: {
+        // "Content-Type": "application/json",
+        access: access,
+      },
+    })
+      .then((res) => res.json())
+      .then((cartsHistory) => {
+        dispatch({
+          type: "FETCH_CARTS_HISTORY",
+          payload: cartsHistory,
+        });
+      })
+      .catch((err) => console.log(err, "error while fetch cart order"));
+  };
+};
 
 export const removeCartById = (ProductId) => {
   console.log("masuk delete from carts", ProductId);
@@ -223,11 +203,10 @@ export const doneTrasaction = () => {
   };
 };
 
-
 export const clearAll = () => {
   return (dispatch) => {
     dispatch({
-      type: "CLEAR_ALL_CARTS_ORDER"
-    })
-  }
-}
+      type: "CLEAR_ALL_CARTS_ORDER",
+    });
+  };
+};

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
+  TouchableHighlight,
   Image,
 } from "react-native";
 import { Text } from "react-native-elements";
@@ -27,6 +28,10 @@ export default function HomePage(props) {
     props.navigation.navigate("Store", {
       storeId: storeId,
     });
+  }
+
+  function goToHistory() {
+    props.navigation.navigate("History");
   }
 
   return (
@@ -74,9 +79,11 @@ export default function HomePage(props) {
         <View style={styles.left}>
           <Text>Discover</Text>
         </View>
-        <View style={styles.right}>
-          <Text>History</Text>
-        </View>
+        <TouchableOpacity onPress={goToHistory}>
+          <View style={styles.right}>
+            <Text>History</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
