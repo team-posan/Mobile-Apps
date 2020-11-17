@@ -6,48 +6,60 @@ const initialState = {
   orders: [],
   paymentBills: 0,
   amount: 0,
+  codeVerify: "",
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case "NEW_USER_LOGIN":
+      console.log(">>> new user login with verification <<<");
+      console.log(action.payload.access_token, "payload.access");
+      console.log(action.payload.codeVerification, "payload.code verify");
+      return {
+        ...state,
+        access: action.payload.access_token,
+        codeVerify: action.payload.codeVerification,
+      };
+
     case "USER_LOGIN":
-      console.log("user login case reducer");
-      console.log(action.payload.access_token);
+      console.log(">>> user login <<<");
+      console.log(action.payload.access_token, "payload.access");
       return { ...state, access: action.payload.access_token };
 
     case "FETCH_STORE_DATA":
-      // console.log("fetch data store");
       return { ...state, dataStore: action.payload.store };
 
     case "FETCH_PRODUCTS_DATA":
-      // console.log("fetch product data");
       return { ...state, dataProducts: action.payload.products };
 
     case "ADD_TO_CARTS":
-      // console.log("add to cart reducer");
       let newCarts = state.carts.concat(action.payload.productsAdd);
       return { ...state, carts: newCarts };
 
     case "EDIT_CARTS_QTY":
-      console.log("masuuk");
-      let filter = state.carts.map((product, index) => {
-        console.log(product);
+      console.log(">>>>>> masuuk edit carts qty <<<<<<");
+      let filter = state.orders.map((product, index) => {
         if (product.ProductId == action.payload.ProductIdEdited) {
-          return (state.carts[index].quantity = action.payload.newQuantity);
+          return (state.orders[index].quantity = action.payload.newQuantity);
         } else {
-          return (state.carts[index] = product);
+          return (state.orders[index] = product);
         }
       });
-      console.log(filter, "filter edit reducer");
-    // return { ...state, carts: filter };
+      // let filterCarts = state.carts.map((product, index) => {
+      //   if (product.ProductId == action.payload.ProductIdEdited) {
+      //     return (state.carts[index].quantity = action.payload.newQuantity);
+      //   } else {
+      //     return (state.carts[index] = product);
+      //   }
+      // });
+      // console.log(filter, "filter edit reducer");
+      return { ...state, orders: filter };
 
     case "CHECKOUT_TO_PAYMENT_ACTION":
-      console.log("order setelah user checkout");
       return { ...state, orders: action.payload };
 
     case "REMOVE_FROM_CARTS":
       let newStateCarts = [];
-      console.log("remove from carts");
       let filterData = state.carts.map((product) => {
         if (product.ProductId !== action.payload.ProductId) {
           newStateCarts.push(product);
@@ -60,7 +72,6 @@ const reducer = (state = initialState, action) => {
       break;
 
     case "PAYMENT_BILLS":
-      console.log("masuk payment bills");
       return {
         ...state,
         paymentBills: action.payload.bills,
@@ -68,7 +79,6 @@ const reducer = (state = initialState, action) => {
       };
 
     case "DONE_TRANSACTIONS":
-      console.log("done tansaction reducer");
       return { ...state, carts: [], orders: [] };
 
     default:

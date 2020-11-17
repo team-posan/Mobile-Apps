@@ -12,7 +12,7 @@ import { fetchStore } from "../store/actions/storeActions";
 
 export default function HomePage(props) {
   const dispatch = useDispatch();
-  const { dataStore } = useSelector((state) => state);
+  const { dataStore, access, codeVerify } = useSelector((state) => state);
 
   useEffect(() => {
     dispatch(fetchStore());
@@ -33,7 +33,7 @@ export default function HomePage(props) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text h4 style={{ color: "white" }}>
-          Hai, User
+          Hai, User {codeVerify}
         </Text>
         <Text h5 style={{ fontWeight: "bold", color: "white" }}>
           {phoneNumber}

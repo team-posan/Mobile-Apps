@@ -17,11 +17,21 @@ export const loginCustomer = (phoneNumber) => {
       },
     })
       .then((resp) => resp.json())
-      .then((access_token) => {
-        dispatch({
-          type: "USER_LOGIN",
-          payload: { access_token },
-        });
+      .then((data) => {
+        if (data.codeVerification) {
+          dispatch({
+            type: "NEW_USER_LOGIN",
+            payload: {
+              access_token: data.access,
+              codeVerification: data.codeVerification,
+            },
+          });
+        } else {
+          dispatch({
+            type: "USER_LOGIN",
+            payload: { access_token: data.access },
+          });
+        }
       })
       .catch((err) => console.log(err));
   };
@@ -48,7 +58,7 @@ export const fetchProducts = (storeId, access) => {
       method: "GET",
       headers: {
         // "Content-Type": "application/json",
-        access: access.access,
+        access: access,
       },
     })
       .then((res) => res.json())
@@ -83,29 +93,29 @@ export const editCartBeforeCheckout = (newQuantity, ProductIdEdited) => {
       type: "EDIT_CARTS_QTY",
       payload: { newQuantity, ProductIdEdited },
     });
-    // console.log("masuk edit carts", newQuantity, ProductIdEdited);
+    console.log("masuk edit carts", typeof newQuantity, typeof ProductIdEdited);
   };
 };
 
 // cara dapet params >>>> edit setelah checkout
-export const editCartQty = (ProductId, access) => {
-  return (dispatch) => {
-    fetch(`http://localhost:5000/carts/317`, {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        access: access.access,
-      },
-      body: JSON.stringify({ ProductId: ProductId, quantity: 10 }),
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        console.log(data, "success edit data");
-      })
-      .catch((err) => console.log(err, "error while edit data"));
-  };
-};
+// export const editCartQty = (ProductId, access) => {
+//   return (dispatch) => {
+//     fetch(`http://localhost:5000/carts/317`, {
+//       method: "PUT",
+//       headers: {
+//         Accept: "application/json",
+//         "Content-Type": "application/json",
+//         access: access,
+//       },
+//       body: JSON.stringify({ ProductId: ProductId, quantity: 10 }),
+//     })
+//       .then((resp) => resp.json())
+//       .then((data) => {
+//         console.log(data, "success edit data");
+//       })
+//       .catch((err) => console.log(err, "error while edit data"));
+//   };
+// };
 
 export const filterProduct = (ProductId) => {
   return (dispatch, getState) => {
@@ -124,13 +134,14 @@ export const filterProduct = (ProductId) => {
 
 export const checkout = (carts, access) => {
   return (dispatch) => {
+    console.log(carts, 'ini << carts')
     console.log("masuk action checkout action,");
     fetch(`http://localhost:5000/carts`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        access: access.access,
+        access: access,
       },
       body: JSON.stringify({ carts }),
     })
@@ -153,7 +164,7 @@ export const checkout = (carts, access) => {
 //       method: "GET",
 //       headers: {
 //         // "Content-Type": "application/json",
-//         access: access.access,
+//         access: access,
 //       },
 //     })
 //       .then((res) => res.json())
@@ -183,7 +194,7 @@ export const removeAllCarts = (ProductId, access) => {
     fetch(`http://localhost:5000/carts`, {
       method: "DELETE",
       headers: {
-        access: access.access,
+        access: access,
       },
     })
       .then((resp) => resp.json())

@@ -9,7 +9,7 @@ import {
   Order,
   Payament,
   Compleate,
-  // Verify,
+  Verify,
 } from "./screens/index";
 
 import { Provider as StateProvider } from "react-redux";
@@ -28,7 +28,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Landing" component={LandingPage} />
-          {/* <Stack.Screen name="Verify" component={Verify} /> */}
+          <Stack.Screen name="Verify" component={Verify} />
           <Stack.Screen name="HomePage" component={HomePage} />
           <Stack.Screen name="Store" component={Store} />
           <Stack.Screen name="Order" component={Order} />

@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Button, TouchableOpacity } from "react-native";
 import { Text } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
-import { checkout } from "../store/actions/storeActions";
-
-// import LottieView from "lottie-react-native";
 
 export default function Payment(props) {
   const dispatch = useDispatch();
@@ -39,7 +36,8 @@ export default function Payment(props) {
       <View style={styles.inputBox}>
         <Text style={styles.text}>Compleate Your Order</Text>
         <Text> payment bills {paymentBills}</Text>
-        <Text> amount {amount}</Text>
+        <Text style={{ marginTop: 300 }}>{amount}</Text>
+        {/* <Text> amount {JSON.stringify(orders)}</Text> */}
         <Text style={{ marginTop: 50 }}>{JSON.stringify(idToPayment)}</Text>
       </View>
 

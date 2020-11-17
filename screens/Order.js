@@ -38,7 +38,7 @@ export default function Order(props) {
 
   const [totalItem, setTotalItems] = useState(itemQuantity);
   // state
-  const { access, carts } = useSelector((state) => state);
+  const { access, carts, orders } = useSelector((state) => state);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -50,14 +50,14 @@ export default function Order(props) {
   function showModals(ProductId, price, quantity) {
     setProductId(ProductId);
     setSelectedItemPrice(price);
-    setQuantity(quantity);
+    setQuantity(+quantity);
     setModalVisible(true);
   }
 
   function editQuantity(newQuantity) {
-    dispatch(editCartBeforeCheckout(newQuantity, ProductIdEdited));
+    dispatch(editCartBeforeCheckout(+newQuantity, ProductIdEdited));
     setModalVisible(!modalVisible);
-    let selisihQty = newQuantity - quantity;
+    let selisihQty = +newQuantity - quantity;
     let minusPrice = itemPrice * selisihQty;
     setBills(minusPrice + bills);
     setTotalItems(Number(totalItem) + Number(selisihQty));
@@ -81,6 +81,7 @@ export default function Order(props) {
         payment_status: item.payment_status,
       };
     });
+    console.log(filteredData, 'filtered data checkout order');
     dispatch(checkout(filteredData, access));
     dispatch(paymentBills(bills, totalItem));
     props.navigation.navigate("Payment");
