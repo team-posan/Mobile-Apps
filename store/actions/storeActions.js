@@ -222,3 +222,12 @@ export const doneTrasaction = () => {
     });
   };
 };
+
+
+export const clearAll = () => {
+  return (dispatch) => {
+    dispatch({
+      type: "CLEAR_ALL_CARTS_ORDER"
+    })
+  }
+}

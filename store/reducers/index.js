@@ -81,6 +81,9 @@ const reducer = (state = initialState, action) => {
     case "DONE_TRANSACTIONS":
       return { ...state, carts: [], orders: [] };
 
+    case "CLEAR_ALL_CARTS_ORDER":
+      return { ...state, carts: [], orders: [] };
+
     default:
       return state;
   }

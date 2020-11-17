@@ -24,6 +24,7 @@ import {
 } from "../store/actions/storeActions";
 
 export default function Order(props) {
+  const dispatch = useDispatch();
   // modals
   const [modalVisible, setModalVisible] = useState(false);
   const [newQuantity, setNewQuantity] = useState(0);
@@ -39,7 +40,6 @@ export default function Order(props) {
   const [totalItem, setTotalItems] = useState(itemQuantity);
   // state
   const { access, carts, orders } = useSelector((state) => state);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (carts.length < 1) {
@@ -81,7 +81,7 @@ export default function Order(props) {
         payment_status: item.payment_status,
       };
     });
-    console.log(filteredData, 'filtered data checkout order');
+    console.log(filteredData, "filtered data checkout order");
     dispatch(checkout(filteredData, access));
     dispatch(paymentBills(bills, totalItem));
     props.navigation.navigate("Payment");
