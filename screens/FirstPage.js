@@ -1,32 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { StyleSheet, View, Button, TextInput } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  TouchableHighlight,
+} from "react-native";
 import { Text } from "react-native-elements";
 import { loginCustomer } from "../store/actions/storeActions";
-import { acc } from "react-native-reanimated";
+import { text, inputText, button } from "../styles/index";
 
-// import LottieView from "lottie-react-native";
 
 export default function FirstPage(props) {
   const dispatch = useDispatch();
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const { access } = useSelector((state) => state);
+  const { access, codeVerify } = useSelector((state) => state);
+
+  useEffect(() => {
+    if (codeVerify !== "") {
+      props.navigation.navigate("Verify", {
+        phoneNumber: phoneNumber,
+      });
+    }
+  }, [codeVerify]);
 
   function goToHomePage() {
-    props.navigation.navigate("HomePage", {
-      phoneNumber: phoneNumber,
-    });
+    if (codeVerify) {
+      props.navigation.navigate("Verify", {
+        phoneNumber: phoneNumber,
+      });
+    } else {
+      props.navigation.navigate("HomePage", {
+        phoneNumber: phoneNumber,
+      });
+    }
   }
-
-  // useEffect(() => {
-  //   if (access.length > 0) {
-  //     goToHomePage();
-  //     console.log(access, "<<< access");
-  //   } else {
-  //     props.navigate.replace("Landing");
-  //   }
-  // }, [access]);
 
   function login() {
     if (!phoneNumber) {
@@ -45,41 +54,35 @@ export default function FirstPage(props) {
   return (
     <View style={styles.container}>
       <View style={styles.inputBox}>
-        <Text style={styles.text}>Sebelum belanja masukin nomor handphone</Text>
+        <Text style={text.textHeader}>Verify Your Number</Text>
         <TextInput
-          style={styles.input}
+          style={inputText.inputText}
           value={phoneNumber}
           dataDetectorTypes="phoneNumber"
           keyboardType="phone-pad"
           onChangeText={(e) => setPhoneNumber(e)}
-          placeholder="phone number"
+          placeholder="phone number..."
           maxLength={13}
           minLength={11}
+          placeholderTextColor="black"
         />
       </View>
 
-      <Button
-        style={{ width: 200 }}
-        color="#E14C17"
-        title="Mulai Belanja"
-        onPress={login}
-      />
+      <TouchableHighlight onPress={login}>
+        <View style={button.buttonBig}>
+          <Text style={text.textButton}>SEND</Text>
+        </View>
+      </TouchableHighlight>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 300,
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "space-around",
-  },
-  text: {
-    width: 250,
-    fontSize: 20,
-    textAlign: "center",
   },
   input: {
     height: 40,

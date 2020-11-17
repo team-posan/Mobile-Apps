@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
+  TouchableHighlight,
   Image,
 } from "react-native";
 import { Text } from "react-native-elements";
@@ -12,7 +13,7 @@ import { fetchStore } from "../store/actions/storeActions";
 
 export default function HomePage(props) {
   const dispatch = useDispatch();
-  const { dataStore } = useSelector((state) => state);
+  const { dataStore, access, codeVerify } = useSelector((state) => state);
 
   useEffect(() => {
     dispatch(fetchStore());
@@ -29,11 +30,15 @@ export default function HomePage(props) {
     });
   }
 
+  function goToHistory() {
+    props.navigation.navigate("History");
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text h4 style={{ color: "white" }}>
-          Hai, User
+          Hai, User {codeVerify}
         </Text>
         <Text h5 style={{ fontWeight: "bold", color: "white" }}>
           {phoneNumber}
@@ -74,9 +79,11 @@ export default function HomePage(props) {
         <View style={styles.left}>
           <Text>Discover</Text>
         </View>
-        <View style={styles.right}>
-          <Text>History</Text>
-        </View>
+        <TouchableOpacity onPress={goToHistory}>
+          <View style={styles.right}>
+            <Text>History</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
