@@ -19,11 +19,21 @@ export const loginCustomer = (phoneNumber) => {
       },
     })
       .then((resp) => resp.json())
-      .then((access_token) => {
-        dispatch({
-          type: "USER_LOGIN",
-          payload: { access_token },
-        });
+      .then((data) => {
+        if (data.codeVerification) {
+          dispatch({
+            type: "NEW_USER_LOGIN",
+            payload: {
+              access_token: data.access,
+              codeVerification: data.codeVerification,
+            },
+          });
+        } else {
+          dispatch({
+            type: "USER_LOGIN",
+            payload: { access_token: data.access },
+          });
+        }
       })
       .catch((err) => console.log(err));
   };
@@ -74,7 +84,7 @@ export const fetchProducts = (storeId, access) => {
       method: "GET",
       headers: {
         // "Content-Type": "application/json",
-        access: access.access,
+        access: access,
       },
     })
       .then((res) => res.json())
@@ -109,6 +119,7 @@ export const editCartBeforeCheckout = (newQuantity, ProductIdEdited) => {
       type: "EDIT_CARTS_QTY",
       payload: { newQuantity, ProductIdEdited },
     });
+
     // console.log("masuk edit carts", newQuantity, ProductIdEdited);
   };
 };
@@ -130,6 +141,7 @@ export const editCartQty = (ProductId, access) => {
         console.log(data, "success edit data");
       })
       .catch((err) => console.log(err, "error while edit data"));
+
   };
 };
 
@@ -150,13 +162,16 @@ export const filterProduct = (ProductId) => {
 
 export const checkout = (carts, access) => {
   return (dispatch) => {
-    console.log("masuk action checkout action,", carts);
-    fetch(`http://10.0.2.2:5000/carts`, {
+
+    console.log(carts, "ini << carts");
+    console.log("masuk action checkout action,");
+    fetch(`http://localhost:5000/carts`, {
+
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        access: access.access,
+        access: access,
       },
       body: JSON.stringify({ carts }),
     })
@@ -165,33 +180,56 @@ export const checkout = (carts, access) => {
         console.log("success added to database", data);
         dispatch({
           type: "CHECKOUT_TO_PAYMENT_ACTION",
-          payload: data
-        })
+          payload: data,
+        });
       })
       .catch((err) => console.log(err));
   };
 };
 
-// export const fetchOrdersCarts = (access) => {
-//   return (dispatch) => {
-//     console.log("masuk fetch carts");
-//     fetch(`http://10.0.2.2:5000/carts`, {
-//       method: "GET",
-//       headers: {
-//         // "Content-Type": "application/json",
-//         access: access.access,
-//       },
-//     })
-//       .then((res) => res.json())
-//       .then((data) => {
-//         dispatch({
-//           type: "ORDER_LIST_AFTER_CHECKOUT",
-//           payload: { data },
-//         });
-//       })
-//       .catch((err) => console.log(err, "error while fetch cart order"));
-//   };
-// };
+
+export const fetchCartsHistory = (access) => {
+  return (dispatch) => {
+    console.log("masuk fetch carts");
+    fetch(`http://localhost:5000/carts`, {
+      method: "GET",
+      headers: {
+        // "Content-Type": "application/json",
+        access: access,
+      },
+    })
+      .then((res) => res.json())
+      .then((cartsHistory) => {
+        dispatch({
+          type: "FETCH_CARTS_HISTORY",
+          payload: cartsHistory,
+        });
+      })
+      .catch((err) => console.log(err, "error while fetch cart order"));
+  };
+};
+// =======
+// // export const fetchOrdersCarts = (access) => {
+// //   return (dispatch) => {
+// //     console.log("masuk fetch carts");
+// //     fetch(`http://10.0.2.2:5000/carts`, {
+// //       method: "GET",
+// //       headers: {
+// //         // "Content-Type": "application/json",
+// //         access: access.access,
+// //       },
+// //     })
+// //       .then((res) => res.json())
+// //       .then((data) => {
+// //         dispatch({
+// //           type: "ORDER_LIST_AFTER_CHECKOUT",
+// //           payload: { data },
+// //         });
+// //       })
+// //       .catch((err) => console.log(err, "error while fetch cart order"));
+// //   };
+// // };
+// >>>>>>> layout
 
 export const removeCartById = (ProductId) => {
   console.log("masuk delete from carts", ProductId);
@@ -209,7 +247,7 @@ export const removeAllCarts = (ProductId, access) => {
     fetch(`http://10.0.2.2:5000/carts`, {
       method: "DELETE",
       headers: {
-        access: access.access,
+        access: access,
       },
     })
       .then((resp) => resp.json())
@@ -234,6 +272,14 @@ export const doneTrasaction = () => {
     console.log("masuk done transaction");
     dispatch({
       type: "DONE_TRANSACTIONS",
+    });
+  };
+};
+
+export const clearAll = () => {
+  return (dispatch) => {
+    dispatch({
+      type: "CLEAR_ALL_CARTS_ORDER",
     });
   };
 };

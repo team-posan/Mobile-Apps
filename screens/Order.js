@@ -13,6 +13,7 @@ import {
   Modal,
   TouchableHighlight,
   TextInput,
+  BackHandler,
 } from "react-native";
 import { Divider } from "react-native-elements";
 import image from "../assets/backgroundOrder.jpg";
@@ -21,9 +22,11 @@ import {
   editCartBeforeCheckout,
   checkout,
   paymentBills,
+  clearAll,
 } from "../store/actions/storeActions";
 
 export default function Order(props) {
+  const dispatch = useDispatch();
   // modals
   const [modalVisible, setModalVisible] = useState(false);
   const [newQuantity, setNewQuantity] = useState(0);
@@ -31,15 +34,30 @@ export default function Order(props) {
 
   // bills
   const { itemQuantity, total } = props.route.params;
-
   const [bills, setBills] = useState(total);
   const [itemPrice, setSelectedItemPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
-
   const [totalItem, setTotalItems] = useState(itemQuantity);
-  // state
   const { access, carts } = useSelector((state) => state);
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert("Hold on!", "This will remove your carts", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel",
+        },
+        { text: "YES", onPress: () => dispatch(clearAll()) },
+      ]);
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+    return () => backHandler.remove();
+  },[]);
 
   useEffect(() => {
     if (carts.length < 1) {
@@ -50,14 +68,14 @@ export default function Order(props) {
   function showModals(ProductId, price, quantity) {
     setProductId(ProductId);
     setSelectedItemPrice(price);
-    setQuantity(quantity);
+    setQuantity(+quantity);
     setModalVisible(true);
   }
 
   function editQuantity(newQuantity) {
-    dispatch(editCartBeforeCheckout(newQuantity, ProductIdEdited));
+    dispatch(editCartBeforeCheckout(+newQuantity, ProductIdEdited));
     setModalVisible(!modalVisible);
-    let selisihQty = newQuantity - quantity;
+    let selisihQty = +newQuantity - quantity;
     let minusPrice = itemPrice * selisihQty;
     setBills(minusPrice + bills);
     setTotalItems(Number(totalItem) + Number(selisihQty));
@@ -79,6 +97,7 @@ export default function Order(props) {
         payment_status: item.payment_status,
       };
     });
+    console.log(filteredData, "filtered data checkout order");
     dispatch(checkout(filteredData, access));
     dispatch(paymentBills(bills, totalItem));
     props.navigation.navigate("Payment");

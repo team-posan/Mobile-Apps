@@ -13,18 +13,20 @@ import {
   fetchProducts,
   addToCarts,
   filterProduct,
+  clearAll,
 } from "../store/actions/storeActions";
 
 export default function Store(props) {
+  const dispatch = useDispatch();
   const [total, setTotal] = useState(0);
   const [itemQuantity, setItemQuantity] = useState(0);
 
-  const dispatch = useDispatch();
   const { dataProducts, carts } = useSelector((state) => state);
   const { access } = useSelector((state) => state);
 
   useEffect(() => {
     dispatch(fetchProducts(storeId, access));
+    dispatch(clearAll());
     setTotal(0);
     setItemQuantity(0);
   }, []);
@@ -47,7 +49,7 @@ export default function Store(props) {
       setTotal(total + product.price);
       setItemQuantity(itemQuantity + 1);
       const { ProductId, quantity, payment_status } = product;
-      dispatch(addToCarts(product));
+      dispatch(addToCarts(product, access));
     } else {
       console.log("ini tambahin qty ");
       // dispatch(editCartQty(product.ProductId, access));
