@@ -13,7 +13,6 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
-  console.log(action, 'from reducer top')
 
   switch (action.type) {
     case 'SET_STATUS_PAYMENT':
@@ -38,7 +37,6 @@ const reducer = (state = initialState, action) => {
       return { ...state, carts: newCarts };
 
     case "CHECKOUT":
-      // console.log("add to cart reducer");
       // let newCarts = state.carts.concat(action.payload.productsAdd);
       // console.log()
       return { ...state, orders:  action.payload};
@@ -57,7 +55,7 @@ const reducer = (state = initialState, action) => {
     // return { ...state, carts: filter };
 
     case "CHECKOUT_TO_PAYMENT_ACTION":
-      console.log("order setelah user checkout");
+      console.log("order setelah user checkout", action.payload);
       return { ...state, orders: action.payload };
 
     case "REMOVE_FROM_CARTS":

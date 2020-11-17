@@ -13,6 +13,7 @@ import {
 
 import { Provider as StateProvider } from "react-redux";
 import store from "./store/index";
+import { Linking } from "react-native";
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,15 @@ Stack.Navigator.defaultProps = {
 };
 
 export default function App() {
+
+  Linking.addEventListener('/', (a,b,c)=>{
+    console.log(a,b,c, 'asdasdas<<<<<<<')
+  })
+
+  Linking.addEventListener('/failure', (a,b,c)=>{
+    console.log(a,b,c, 'asdasdas<<<<<<<')
+  })
+
   return (
     <StateProvider store={store}>
       <NavigationContainer>
