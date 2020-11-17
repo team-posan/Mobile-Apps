@@ -64,7 +64,9 @@ const reducer = (state = initialState, action) => {
           return (state.orders[index] = product);
         }
       });
-      return { ...state, orders: filter };
+      // console.log(filter, "filter edit reducer");
+    return { ...state, orders: filter };
+
 
     case "CHECKOUT_TO_PAYMENT_ACTION":
 

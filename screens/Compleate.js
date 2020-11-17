@@ -42,7 +42,7 @@ export default function Compleate(props) {
     <View style={styles.container}>
       <View style={styles.inputBox}>
         {/* <Text> carts : {JSON.stringify(orders.carts)}</Text> */}
-        <Text style={styles.text}>Thanks for your order</Text>
+        <Text style={styles.text}>Thank you for the orders, please give this QR Code to the cashier to check your transaction</Text>
       </View>
 
       {orders ? <QRCode content={filterCart()} size={200} /> : null}
