@@ -6,10 +6,9 @@ import {
   TextInput,
   TouchableHighlight,
 } from "react-native";
-import { Text } from "react-native-elements";
 import { loginCustomer } from "../store/actions/storeActions";
 import { text, inputText, button } from "../styles/index";
-
+import { Button, Icon, Layout, Text, Input } from '@ui-kitten/components';
 
 export default function FirstPage(props) {
   const dispatch = useDispatch();
@@ -52,37 +51,53 @@ export default function FirstPage(props) {
   }
 
   return (
-    <View style={styles.container}>
+    <Layout style={styles.container} level='1'>
       <View style={styles.inputBox}>
-        <Text style={text.textHeader}>Verify Your Number</Text>
-        <TextInput
-          style={inputText.inputText}
-          value={phoneNumber}
-          dataDetectorTypes="phoneNumber"
-          keyboardType="phone-pad"
-          onChangeText={(e) => setPhoneNumber(e)}
-          placeholder="phone number..."
-          maxLength={13}
-          minLength={11}
-          placeholderTextColor="black"
-        />
+        <Text category='h1'>POSAN</Text>
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'center'
+        }}>
+          <Input
+            style={styles.inputText}
+            dataDetectorTypes="phoneNumber"
+            placeholder='Phone number. e.g. 08...'
+            value={phoneNumber}
+            maxLength={13}
+            minLength={11}
+            keyboardType="phone-pad"
+            onChangeText={(e) => setPhoneNumber(e)}
+          />
+           <Button
+            style={{backgroundColor: "#1E2749"}}
+            onPress={login}>
+            Send
+          </Button>
+        </View>
       </View>
 
-      <TouchableHighlight onPress={login}>
+      {/* <TouchableHighlight onPress={login}>
         <View style={button.buttonBig}>
           <Text style={text.textButton}>SEND</Text>
         </View>
-      </TouchableHighlight>
-    </View>
+      </TouchableHighlight> */}
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
+  inputText: {
+    height: 15,
+    width: 230,
+    marginRight: 5,
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: 'flex-end',
+    // marginBottom: 50
+    paddingBottom: 100
   },
   input: {
     height: 40,

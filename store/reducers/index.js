@@ -99,7 +99,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, carts: [], orders: [] };
 
     case "FETCH_CARTS_HISTORY":
-      return { ...state, history: action.payload.cartsHistory };
+      // console.log(action.payload)
+      return { ...state, history: action.payload.carts };
 
     default:
       return state;
