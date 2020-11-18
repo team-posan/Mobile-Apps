@@ -30,7 +30,7 @@ export default function FirstPage(props) {
         phoneNumber: phoneNumber,
       });
     } else {
-      props.navigation.navigate("HomePage", {
+      props.navigation.navigate("MainNaviigation", {
         phoneNumber: phoneNumber,
       });
     }

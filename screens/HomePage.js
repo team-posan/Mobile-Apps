@@ -21,7 +21,7 @@ export default function HomePage(props) {
     dispatch(fetchStore());
   }, []);
 
-  const { phoneNumber } = props.route.params;
+  // const { phoneNumber } = props.route.params;
 
   const [storeId, setStoreId] = useState();
 
@@ -42,16 +42,20 @@ export default function HomePage(props) {
     <View style={styles.container}>
       <View style={[styles.header]}>
         <Text category='h1' style={{ color: "white" }}>
-          Hai, User
+          Hai, Customer
         </Text>
-        <Text category='h5' style={{ fontWeight: "bold", color: "white" }}>
+        {/* <Text category='h5' style={{ fontWeight: "bold", color: "white" }}>
           {phoneNumber}
-        </Text>
+        </Text> */}
       </View>
       <View style={styles.productsContainer}>
-        <Text category='h4' style={{ marginBottom: 10, textAlign: 'center' }}>
-          Pilih Toko Terdekat
-        </Text>
+        <View style={{
+          padding: 10
+        }}>
+          <Text category='h4' style={{ marginBottom: 10, textAlign: 'left' }}>
+            Pilih Toko
+          </Text>
+        </View>
         <ScrollView showsVerticalScrollIndicator={false}>
 
           <View>

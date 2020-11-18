@@ -92,53 +92,80 @@ export default function Store(props) {
           <FlatList
             showsVerticalScrollIndicator={false}
             data={dataProducts}
-            renderItem={({ item }) => (
+            renderItem={({ item }, index) => (
               <TouchableOpacity
-                key={item.id}
-                onPress={() =>
-                  cartHandler({
-                    ProductId: item.id,
-                    quantity: 1,
-                    payment_status: "unpaid",
-                    price: item.price,
-                    Product: item,
-                  })
-                }
-              >
-                <View style={[styles.card]}>
-                  <Image
-                    style={styles.image}
-                    source={{ uri: item.image_url }}
-                  />
+                      style={styles.card}
+                      key={index}
+                      onPress={() =>
+                        cartHandler({
+                          ProductId: item.id,
+                          quantity: 1,
+                          payment_status: "unpaid",
+                          price: item.price,
+                          Product: item,
+                        })
+                      }
+                    >
+                      <Image
+                        style={styles.image}
+                        source={{ uri: item.image_url }}
+                      />
+                      <View style={styles.innerTextCards}>
+                        <Text h4 style={{ fontWeight: "bold" }}>
+                          {item.product_name}
+                        </Text>
+                        <Text>Rp.{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")},-</Text>
+                        <Text>Stock {item.stock}</Text>
+                      </View>
+                    </TouchableOpacity>
+              // <TouchableOpacity
+              //   key={item.id}
+              //   onPress={() =>
+              //     cartHandler({
+              //       ProductId: item.id,
+              //       quantity: 1,
+              //       payment_status: "unpaid",
+              //       price: item.price,
+              //       Product: item,
+              //     })
+              //   }
+              // >
+              //   <View style={[styles.card]}>
+              //     <Image
+              //       style={styles.image}
+              //       source={{ uri: item.image_url }}
+              //     />
 
-                  <View style={styles.productTextCard}>
-                    <View style={styles.innerTextCards}>
-                      <Text style={{ fontWeight: "bold" }}>
-                        {item.product_name}
-                      </Text>
-                      <Text style={{ fontWeight: "bold", fontSize: 10 }}>
-                        Rp. {item.price}
-                      </Text>
-                    </View>
-                    <View style={styles.quantityProduct}>
-                      <Text style={{ fontWeight: "bold" }}>Stock: {item.stock}</Text>
-                    </View>
-                  </View>
-                </View>
-              </TouchableOpacity>
+              //     <View style={styles.productTextCard}>
+              //       <View style={styles.innerTextCards}>
+              //         <Text style={{ fontWeight: "bold" }}>
+              //           {item.product_name}
+              //         </Text>
+              //         <Text style={{ fontWeight: "bold", fontSize: 10 }}>
+              //           Rp. {item.price}
+              //         </Text>
+              //       </View>
+              //       <View style={styles.quantityProduct}>
+              //         <Text style={{ fontWeight: "bold" }}>Stock: {item.stock}</Text>
+              //       </View>
+              //     </View>
+              //   </View>
+              // </TouchableOpacity>
             )}
             keyExtractor={(item) => item.id}
             numColumns={numColumns}
           />
         </View>
       </View>
-      <View style={styles.bottomTotalBar}>
+      {
+        itemQuantity !== 0 
+        ? <View style={styles.bottomTotalBar}>
         <View style={styles.leftBottomBar}>
           <Text style={{ fontSize: 10, color: "white" }}>
             {itemQuantity} Items
           </Text>
           <Text style={{ fontSize: 20, fontWeight: "bold", color: "white" }}>
-            {total.toLocaleString("en-US")},-
+            Rp {total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")},-
           </Text>
         </View>
         <TouchableOpacity style={styles.rightBottomBar} onPress={checkoutCarts}>
@@ -149,6 +176,10 @@ export default function Store(props) {
           </View>
         </TouchableOpacity>
       </View>
+      : <View style={[styles.bottomTotalBar, {
+        backgroundColor: 'transparent'
+      }]}></View>
+      }
       {/* <View style={styles.menuNav}>
         <View style={styles.left}>
           <Text>Discover</Text>
@@ -160,7 +191,7 @@ export default function Store(props) {
     </View>
   );
 }
-const numColumns = 2;
+const numColumns = 1;
 let size = Dimensions.get("window").width / numColumns;
 const styles = StyleSheet.create({
   itemContainer: {
@@ -194,23 +225,27 @@ const styles = StyleSheet.create({
     // backgroundColor: "#C4C4C4",
     // display: "flex",
     alignItems: "center",
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
 
   card: {
+    // width: '80%',
+    // height: 80,
+    backgroundColor: "#fff",
+    marginTop: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 0,
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#C4C4C4",
-    margin: 5,
-    elevation: 1
+    borderWidth: 0.7,
+    borderColor: "#EFEFEF",
   },
   image: {
-    width: size - 45,
-    height: size - 40,
+    width: 100,
+    height: 100,
     borderRadius: 10,
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 10,
+    // left: 10,
+    margin: 10
 
 
     // shadowColor: "#000",
@@ -232,11 +267,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   innerTextCards: {
-    width: 90,
-    height: 50,
+    width: 220,
+    height: 100,
+    padding: 10,
+    top: 5,
+    left: 15,
+    backgroundColor: "transparent",
     justifyContent: "flex-start",
-    // backgroundColor: "blue",
-    fontSize: 10,
   },
   quantityProduct: {
     width: 60,

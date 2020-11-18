@@ -10,7 +10,7 @@ export default function Verify(props) {
   const { phoneNumber } = props.route.params;
 
   function goToHomePage() {
-    props.navigation.navigate("HomePage", {
+    props.navigation.navigate("MainNaviigation", {
       phoneNumber: phoneNumber,
     });
   }
