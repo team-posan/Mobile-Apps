@@ -7,9 +7,12 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   Image,
+  Dimensions
 } from "react-native";
 import { Text } from "react-native-elements";
 import { fetchStore } from "../store/actions/storeActions";
+
+const width = Dimensions.get('screen').width
 
 export default function HomePage(props) {
   const dispatch = useDispatch();
@@ -25,8 +28,10 @@ export default function HomePage(props) {
 
   function storeIdHandler(storeId) {
     setStoreId(storeId);
+    const storeSelected = dataStore.filter(store => store.id === storeId)
     props.navigation.navigate("Store", {
       storeId: storeId,
+      storeName: storeSelected.name
     });
   }
 
@@ -36,9 +41,9 @@ export default function HomePage(props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={[styles.header]}>
         <Text h4 style={{ color: "white" }}>
-          Hai, User {codeVerify}
+          Hai, User
         </Text>
         <Text h5 style={{ fontWeight: "bold", color: "white" }}>
           {phoneNumber}
@@ -75,6 +80,7 @@ export default function HomePage(props) {
           </View>
         </ScrollView>
       </View>
+
       <View style={styles.menuNav}>
         <View style={styles.left}>
           <Text>Discover</Text>
@@ -92,27 +98,28 @@ export default function HomePage(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#C4C4C4",
+    // backgroundColor: "#C4C4C4",
     justifyContent: "space-around",
   },
   header: {
     height: 150,
     backgroundColor: "#1E2749",
-    borderBottomRightRadius: 50,
-    borderColor: "white",
+    // borderBottomRightRadius: 50,
+    // borderColor: "white",
     display: "flex",
     justifyContent: "flex-end",
     padding: 30,
-    marginTop: -10,
+    // marginTop: -10,
   },
   productsContainer: {
     height: 580,
-    backgroundColor: "#C4C4C4",
-    padding: 30,
+    // backgroundColor: "#C4C4C4",
+    paddingLeft: 30,
+    paddingRight: 30,
   },
 
   card: {
-    width: 330,
+    width: '95%',
     height: 100,
     backgroundColor: "#fff",
     display: "flex",
@@ -123,6 +130,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     padding: 0,
     borderRadius: 10,
+    
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 7,
+    },
+    shadowOpacity: 0.41,
+    shadowRadius: 9.11,
+
+    elevation: 14,
   },
   image: {
     width: 100,
@@ -140,7 +158,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   menuNav: {
-    width: 400,
+    width: '100%',
     height: 50,
     display: "flex",
     flexDirection: "row",

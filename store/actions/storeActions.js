@@ -11,7 +11,7 @@ export const baseUrl =
 export const loginCustomer = (phoneNumber) => {
   return (dispatch) => {
     let phone_number = phoneNumber.toString();
-    fetch(`http://10.0.2.2:5000/user/customerlogin`, {
+    fetch(`http://localhost:5000/user/customerlogin`, {
       method: "POST",
       body: JSON.stringify({ phone_number }),
       headers: {
@@ -48,7 +48,7 @@ export const paymentServices = (idToPay, amount) => {
   }, scrt)
   console.log(payCode, 'paymentServices bottom')
   return (dispatch) => {
-    fetch(`http://10.0.2.2:5000/midtrans?pay=${payCode}`)
+    fetch(`http://localhost:5000/midtrans?pay=${payCode}`)
       .then((res) => res.json())
       .then((data) => {
         // console.log('dari payementServices', data)
@@ -66,7 +66,7 @@ export const paymentServices = (idToPay, amount) => {
 export const fetchStore = () => {
   console.log(Platform.OS);
   return (dispatch) => {
-    fetch(`http://10.0.2.2:5000/store`)
+    fetch(`http://localhost:5000/store`)
       .then((res) => res.json())
       .then((store) => {
         dispatch({
@@ -80,7 +80,7 @@ export const fetchStore = () => {
 
 export const fetchProducts = (storeId, access) => {
   return (dispatch) => {
-    fetch(`http://10.0.2.2:5000/product?store=${storeId}`, {
+    fetch(`http://localhost:5000/product?store=${storeId}`, {
       method: "GET",
       headers: {
         // "Content-Type": "application/json",
@@ -127,7 +127,7 @@ export const editCartBeforeCheckout = (newQuantity, ProductIdEdited) => {
 // cara dapet params >>>> edit setelah checkout
 export const editCartQty = (ProductId, access) => {
   return (dispatch) => {
-    fetch(`http://10.0.2.2:5000/carts/317`, {
+    fetch(`http://localhost:5000/carts/317`, {
       method: "PUT",
       headers: {
         Accept: "application/json",
@@ -212,7 +212,7 @@ export const fetchCartsHistory = (access) => {
 // // export const fetchOrdersCarts = (access) => {
 // //   return (dispatch) => {
 // //     console.log("masuk fetch carts");
-// //     fetch(`http://10.0.2.2:5000/carts`, {
+// //     fetch(`http://localhost:5000/carts`, {
 // //       method: "GET",
 // //       headers: {
 // //         // "Content-Type": "application/json",
@@ -244,7 +244,7 @@ export const removeCartById = (ProductId) => {
 //bulk daelete all carts
 export const removeAllCarts = (ProductId, access) => {
   return (dispatch) => {
-    fetch(`http://10.0.2.2:5000/carts`, {
+    fetch(`http://localhost:5000/carts`, {
       method: "DELETE",
       headers: {
         access: access,

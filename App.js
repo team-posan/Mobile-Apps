@@ -36,6 +36,7 @@ export default function App() {
 
   return (
     <StateProvider store={store}>
+      <StatusBar style="dark"/>
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Landing" component={LandingPage} />
