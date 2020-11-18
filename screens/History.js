@@ -142,8 +142,8 @@ export default function History() {
               },-</Text>
 
               <View>
-                <Button onPress={() => setVisible(false)}>
-                  OKE
+                <Button style={{backgroundColor:'#E14C17'}} onPress={() => setVisible(false)}>
+                  Close
                 </Button>
               </View>
             </Card>

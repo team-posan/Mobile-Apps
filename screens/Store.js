@@ -77,9 +77,6 @@ export default function Store(props) {
         <Text h4 style={{ color: "white" }}>
         Pilih Product
         </Text>
-        <Text h5 style={{ fontWeight: "bold", color: "white" }}>
-          Store {storeName}
-        </Text>
       </View>
 
       <View style={styles.productsContainer}>
@@ -204,18 +201,21 @@ const styles = StyleSheet.create({
     backgroundColor: "lightblue",
   },
   container: {
+    marginTop:41,
     flex: 1,
     backgroundColor: "#fff",
-    justifyContent: "space-around",
+    // justifyContent: "space-around",
   },
   header: {
-    height: 150,
+    height: 120,
     backgroundColor: "#1E2749",
     // borderBottomRightRadius: 50,
     borderColor: "white",
     display: "flex",
     justifyContent: "flex-end",
-    padding: 30,
+    paddingVertical: 46,
+    paddingHorizontal: 30,
+    marginBottom:10
     // marginTop: -10,
   },
   productsContainer: {

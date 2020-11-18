@@ -15,7 +15,7 @@ import {
   TextInput,
   BackHandler,
 } from "react-native";
-import { Divider } from "react-native-elements";
+// import { Divider } from "react-native-elements";
 import image from "../assets/backgroundOrder.jpg";
 import {
   removeCartById,
@@ -24,6 +24,9 @@ import {
   paymentBills,
   clearAll,
 } from "../store/actions/storeActions";
+
+import { Divider } from '@ui-kitten/components'
+
 
 export default function Order(props) {
   const dispatch = useDispatch();
@@ -110,7 +113,7 @@ export default function Order(props) {
           <Text style={{ fontSize: 10, color: "#fff", fontStyle: "italic" }}>
             Total Bills
           </Text>
-          <Text style={styles.total}>RP {bills}</Text>
+          <Text style={styles.total}>Rp. {bills.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")},-</Text>
           <Text style={styles.items}>{totalItem} items</Text>
         </View>
       </View>
@@ -204,7 +207,8 @@ export default function Order(props) {
                           <Text h4 style={{ fontWeight: "bold", fontSize: 20 }}>
                             {item.Product.product_name}
                           </Text>
-                          <Text>Price Rp.{item.price}</Text>
+                          <Divider/>
+                          <Text>Price Rp.{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")},-</Text>
                           <Text>{item.quantity} items</Text>
                           {/* <Text style={{ fontWeight: "bold" }}>
                             Totals {item.quantity * item.price}
@@ -263,7 +267,7 @@ export default function Order(props) {
                       width: 95,
                       height: 40,
                       backgroundColor: "#1E2749",
-                      borderRadius: 5,
+                      borderRadius: 3,
                       alignItems: "center",
                       justifyContent: "center",
                     }}
@@ -334,10 +338,11 @@ export default function Order(props) {
           style={{
             width: 350,
             height: 50,
+            marginLeft:11,
             backgroundColor: "#1E2749",
             alignItems: "center",
             justifyContent: "center",
-            borderRadius: 10,
+            borderRadius: 5,
           }}
         >
           <Text
@@ -347,7 +352,7 @@ export default function Order(props) {
               color: "#fff",
             }}
           >
-            Process Checkouts
+            Process Checkout
           </Text>
         </View>
       </TouchableOpacity>
@@ -359,16 +364,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 2,
     backgroundColor: "#fff",
+    marginTop:41,
+
   },
   header: {
-    height: 180,
+    height: 120,
     alignItems: "flex-start",
     backgroundColor: "#1E2749",
     justifyContent: "center",
     alignItems: "flex-start",
+    // marginVertical:30
+    paddingBottom:28
   },
   boxHeader: {
-    top: 0,
+    marginVertical:10,
+    // top: 0,
     width: 150,
     height: 80,
     left: 40,
@@ -379,7 +389,7 @@ const styles = StyleSheet.create({
   total: {
     color: "#fff",
     fontWeight: "bold",
-    fontSize: 30,
+    fontSize: 20,
     // textShadowOffset: { width: 2, height: 2 },
     // textShadowRadius: 1,
     // textShadowColor: "#000",
@@ -393,7 +403,7 @@ const styles = StyleSheet.create({
     top: -30,
     height: 520,
     backgroundColor: "#fff",
-    borderTopRightRadius: 30,
+    // borderTopRightRadius: 3,
     // borderTopLeftRadius: 30,
     borderBottomLeftRadius: 30,
     shadowColor: "#000",
@@ -403,8 +413,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.48,
     shadowRadius: 11.95,
-
-    elevation: 18,
+    // elevation: 2,
   },
   headerOrder: {
     top: 10,

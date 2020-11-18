@@ -69,9 +69,10 @@ export default function FirstPage(props) {
             onChangeText={(e) => setPhoneNumber(e)}
           />
            <Button
-            style={{backgroundColor: "#1E2749"}}
+            style={{backgroundColor: "#1E2749" ,marginLeft:5}}
+            size={'medium'}
             onPress={login}>
-            Send
+            Login
           </Button>
         </View>
       </View>
@@ -87,9 +88,10 @@ export default function FirstPage(props) {
 
 const styles = StyleSheet.create({
   inputText: {
-    height: 15,
+    height: 17,
     width: 230,
     marginRight: 5,
+    marginTop:3
   },
   container: {
     flex: 1,

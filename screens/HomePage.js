@@ -9,7 +9,7 @@ import {
   Dimensions
 } from "react-native";
 import { fetchStore } from "../store/actions/storeActions";
-import { Text, Card } from '@ui-kitten/components'
+import { Text, Card, Divider } from '@ui-kitten/components'
 
 const width = Dimensions.get('screen').width
 
@@ -41,20 +41,21 @@ export default function HomePage(props) {
   return (
     <View style={styles.container}>
       <View style={[styles.header]}>
-        <Text category='h1' style={{ color: "white" }}>
-          Hai, Customer
+        <Text category='h4' style={{ color: "white" }}>
+          Hi, Customer
+           {/* <Text category='h4' style={{ marginBottom: 10, textAlign: 'left' }}>
+            Pilih Toko
+          </Text> */}
         </Text>
-        {/* <Text category='h5' style={{ fontWeight: "bold", color: "white" }}>
-          {phoneNumber}
-        </Text> */}
+        <Text  style={{ color: "white" }}>
+          Choose Store
+        </Text>
       </View>
       <View style={styles.productsContainer}>
         <View style={{
           padding: 10
         }}>
-          <Text category='h4' style={{ marginBottom: 10, textAlign: 'left' }}>
-            Pilih Toko
-          </Text>
+         
         </View>
         <ScrollView showsVerticalScrollIndicator={false}>
 
@@ -69,12 +70,13 @@ export default function HomePage(props) {
                     style={styles.image}
                     source={{
                       uri:
-                        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                      "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
                     }}
-                  />
+                    />
                   <View style={styles.innerTextCards}>
-                    <Text category='h4' style={{fontWeight: 'bold'}}>{item.store_name}</Text>
-                    <Text category='h6' >{item.store_address}</Text>
+                    <Text category='h5' style={{fontWeight: 'bold'}}>{item.store_name}</Text>
+                    <Divider style={{marginRight:10}} />
+                    <Text  >{item.store_address}</Text>
                     {/* <Text>{item.id}</Text> */}
                   </View>
                 </View>
@@ -119,13 +121,14 @@ export default function HomePage(props) {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop:41,
     flex: 1,
     flexDirection: 'column',
     backgroundColor: "#fff",
     justifyContent: 'space-between',
   },
   header: {
-    height: 150,
+    height: 120,
     backgroundColor: "#1E2749",
     // borderBottomRightRadius: 50,
     // borderColor: "white",
@@ -168,8 +171,10 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-    borderRadius: 10,
+    borderRadius: 3,
     marginLeft: -5,
+    marginTop:6,
+    marginBottom:3
   },
   innerTextCards: {
     width: 210,
