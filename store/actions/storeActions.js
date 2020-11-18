@@ -29,13 +29,14 @@ export const loginCustomer = (phoneNumber) => {
             },
           });
         } else {
+          console.log('data new user>>>', data)
           dispatch({
             type: "USER_LOGIN",
             payload: { access_token: data.access },
           });
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err,'errrrrrr<<<'));
   };
 };
 

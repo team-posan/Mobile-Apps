@@ -85,7 +85,7 @@ export default function Payment(props) {
     <View style={styles.container}>
       <View>
         <Text style={styles.textHeader}>Pay With Go-Pay</Text>
-        <Text style={styles.paymentBills}>Total Amount {paymentBills}</Text>
+        <Text style={styles.paymentBills}>Total Amount Rp. {paymentBills.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")},-</Text>
       </View>
 
       <Image
