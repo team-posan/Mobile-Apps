@@ -201,9 +201,11 @@ export const fetchCartsHistory = (access) => {
       .then((res) => res.json())
       .then((cartsHistory) => {
         // console.log('>>.', cartsHistory)
+        let result = cartsHistory.carts.reduce((k, obj) => Object.assign(k, { [obj.createdAt]:( k[obj.createdAt] || [] ).concat(obj) }), {})
+        // console.log('>>>', result)
         dispatch({
           type: "FETCH_CARTS_HISTORY",
-          payload: cartsHistory.carts.reverse(),
+          payload: result,
         });
       })
       .catch((err) => console.log(err, "error while fetch cart order"));

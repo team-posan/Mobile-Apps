@@ -2,12 +2,20 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { View, StyleSheet } from "react-native";
 import { fetchCartsHistory } from "../store/actions/storeActions";
-import { Text, Card } from '@ui-kitten/components'
+import { Button, Modal, Text, Card } from '@ui-kitten/components'
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 
+const renderListHistory = (dataCartGroup) => {
+
+}
 
 export default function History() {
   const dispatch = useDispatch();
+  const [visible, setVisible] = useState(false)
+  const [groupCartToShow, setGroupCartToShow] = useState({
+    date: '',
+    carts: []
+  })
   const { orders, carts, history, access } = useSelector((state) => state);
 
   useEffect(() => {
@@ -21,6 +29,14 @@ export default function History() {
     dispatch(fetchCartsHistory(access));
   }, [access]);
 
+  const showModalHandler = (cartGroup, dateBuy) => {
+    setGroupCartToShow({...groupCartToShow, 
+      date: dateBuy,
+      carts: cartGroup
+    })
+    setVisible(true)
+  }
+
 
   return (
     <View style={styles.container}>
@@ -30,34 +46,37 @@ export default function History() {
         </Text>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
+        {/* <Text>{JSON.stringify(history, null, 4)}</Text> */}
         <View>
           {
-              history !== undefined ? history.map(historyCart => {
-                if (historyCart.payment_status === 'done' || historyCart.payment_status === 'unpaid') {
-                  return (
-                    <Card style={{
-                      margin: 10
-                    }}
-                    key={historyCart.id}
-                    >
-                      <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between'
-                      }}>
-                        <View>
-                          <Text category='h6' >{historyCart.quantity} {historyCart.Product.product_name}</Text>
-                          <Text category='h6' >Rp {(historyCart.quantity * historyCart.Product.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ,-</Text>
-                          <Text>{historyCart.createdAt.split('T')[0]}, {historyCart.createdAt.split('T')[1].slice(0, 5)}</Text>
-                        </View>
-                        <View>
-                          <Text>{historyCart.payment_status}</Text>
-                          <Text>#{historyCart.id}</Text>
-                        </View>
+            history !== undefined ? Object.keys(history).map((cartGroup, index) => {
+              // console.log('???...', history[cartGroup])
+              return (
+                <Card style={{
+                  margin: 10
+                }}
+                  onPress={() => showModalHandler(history[cartGroup], cartGroup)}
+                  key={cartGroup}
+                >
+                  <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                  }}>
+                    <View>
+                      <Text category='h6' >{history[cartGroup].length} Item</Text>
+                      <Text>{history[cartGroup][0].createdAt.split('T')[0]}, {history[cartGroup][0].createdAt.split('T')[1].slice(0, 5)}</Text>
+                      <View>
+                        
                       </View>
-                    </Card>
-                  )
-                }
-              })
+                    </View>
+                    <View>
+                      <Text>{history[cartGroup][0].payment_status}</Text>
+                      <Text>#{history[cartGroup][0].id}</Text>
+                    </View>
+                  </View>
+                </Card>
+              )
+            })
               : <View style={{
                 alignItems: 'center',
                 margin: 10
@@ -66,7 +85,71 @@ export default function History() {
               </View>
           }
         </View>
-        </ScrollView>
+      </ScrollView>
+          {
+            groupCartToShow.date !== '' 
+            ? <Modal
+            visible={visible}
+            style={{
+              width: '90%'
+            }}
+            backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.1)',}}
+            onBackdropPress={() => setVisible(false)}>
+            <Card disabled={true}>
+            <Text style={{marginBottom: 10}} category='h5' >Transaction at {groupCartToShow.date.split('T')[0]}, {groupCartToShow.date.split('T')[1].slice(0, 5)}</Text>
+              <View>
+                {
+                  groupCartToShow.carts.map(cart => {
+                    return (
+                      <Card
+                        key={cart.id}
+                        style={{
+                          marginTop: 5,
+                          marginBottom: 5,
+                        }}
+                      >
+                        <View style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between'
+                        }}>
+                          <View>
+                      <Text category='h6' >{cart.Product.product_name}</Text>
+                      <Text category='h6' >{cart.quantity} * Rp{(cart.Product.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")},-</Text>
+                      {/* <Text category='h6' >Rp {(cart.quantity*cart.Product.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} </Text> */}
+                            {/* <Text>{cart.createdAt.split('T')[0]}, {cart.createdAt.split('T')[1].slice(0, 5)}</Text> */}
+                            <View>
+                              
+                            </View>
+                          </View>
+                          <View>
+                      <Text category='h6' >Rp {(cart.quantity*cart.Product.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} </Text>
+
+                            {/* <Text>{cart.payment_status}</Text>
+                            <Text>#{cart.id}</Text> */}
+                          </View>
+                        </View>
+                      </Card>
+                    )
+                  })
+                }
+              </View>
+              <Text category='h6' style={{
+                margin: 10,
+                padding: 5,
+                textAlign: 'right'
+              }} >Total Rp {
+                (groupCartToShow.carts.map(o => (o.quantity * o.Product.price)).reduce((a, c) => { return a + c })).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+              },-</Text>
+
+              <View>
+                <Button onPress={() => setVisible(false)}>
+                  OKE
+                </Button>
+              </View>
+            </Card>
+          </Modal>
+          : <></>
+          }
       {/* <Text> orders data {JSON.stringify(history)}</Text> */}
     </View>
   );

@@ -8,7 +8,7 @@ const initialState = {
   amount: 0,
 
   codeVerify: "",
-  history: [],
+  history: undefined,
 
   payment: {
     statusUrl: '',
