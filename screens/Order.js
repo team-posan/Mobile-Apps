@@ -57,7 +57,7 @@ export default function Order(props) {
       backAction
     );
     return () => backHandler.remove();
-  },[]);
+  }, []);
 
   useEffect(() => {
     if (carts.length < 1) {
@@ -105,68 +105,119 @@ export default function Order(props) {
 
   return (
     <View style={styles.container}>
-      <View>
-        <ImageBackground
-          style={styles.headerOrder}
-          source={image}
-          imageStyle={{
-            borderBottomLeftRadius: 80,
-            borderBottomRightRadius: 80,
-          }}
-        >
-          <Text style={styles.headerOrderText}>Order</Text>
-        </ImageBackground>
-      </View>
-      <View style={styles.boxBill}>
-        <View style={styles.bill}>
-          <View
-            style={{
-              width: 250,
-              justifyContent: "space-between",
-              flexDirection: "row",
-              alignItems: "center",
-              //   backgroundColor: "black",
-            }}
-          >
-            <Text style={{ fontSize: 12 }}>Sub Total</Text>
-            <Text style={{ fontSize: 12 }}>Rp.{bills}</Text>
-          </View>
+      <View style={styles.header}>
+        <View style={styles.boxHeader}>
+          <Text style={{ fontSize: 10, color: "#fff", fontStyle: "italic" }}>
+            Total Bills
+          </Text>
+          <Text style={styles.total}>RP {bills}</Text>
+          <Text style={styles.items}>{totalItem} items</Text>
         </View>
-        <View style={styles.bill}>
-          <View
+      </View>
+
+      <View style={styles.boxOrder}>
+        <View style={styles.headerOrder}>
+          <Text
             style={{
-              width: 250,
-              justifyContent: "space-between",
-              flexDirection: "row",
-              alignItems: "center",
-              //   backgroundColor: "black",
+              fontWeight: "bold",
+              fontSize: 20,
+              color: "black",
+              marginLeft: 30,
             }}
           >
-            <Text style={{ fontSize: 12 }}>Total items</Text>
-            <Text style={{ fontSize: 12 }}>{totalItem}</Text>
-          </View>
+            Order List
+          </Text>
         </View>
 
-        <View style={styles.bill}>
-          <Divider style={{ top: 10 }}>
-            <View
-              style={{
-                width: 250,
-                marginTop: 10,
-                justifyContent: "space-between",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ fontSize: 15, fontWeight: "bold" }}>Totals</Text>
-              <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-                Rp.{bills}
-              </Text>
+        <View style={styles.centeredView}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+            }}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>Edit quantity</Text>
+
+                <TextInput
+                  style={styles.input}
+                  keyboardType="numeric"
+                  onChangeText={(e) => setNewQuantity(e)}
+                  placeholder="insert new quantity"
+                  maxLength={2}
+                  minLength={0}
+                />
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    width: 300,
+                    height: 100,
+                  }}
+                >
+                  <TouchableHighlight
+                    onPress={() => {
+                      editQuantity(newQuantity);
+                    }}
+                  >
+                    <Text>Submit</Text>
+                  </TouchableHighlight>
+
+                  <TouchableHighlight onPress={removeFromCarts}>
+                    <Text style={styles.textStyle}>Remove From Carts</Text>
+                  </TouchableHighlight>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisible(!modalVisible);
+                    }}
+                  >
+                    <Text>Cancel</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
-          </Divider>
+          </Modal>
         </View>
+
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.cartsSection}>
+            {carts
+              ? carts.map((item, index) => {
+                  return (
+                    <TouchableOpacity
+                      style={styles.card}
+                      key={index}
+                      onPress={() => {
+                        showModals(item.ProductId, item.price, item.quantity);
+                      }}
+                    >
+                      <View style={styles.cart} key={index}>
+                        <Image
+                          style={styles.cartImage}
+                          source={{ uri: item.Product.image_url }}
+                        />
+                        <View style={styles.cartText} key={index}>
+                          <Text h4 style={{ fontWeight: "bold", fontSize: 20 }}>
+                            {item.Product.product_name}
+                          </Text>
+                          <Text>Price Rp.{item.price}</Text>
+                          <Text>{item.quantity} items</Text>
+                          {/* <Text style={{ fontWeight: "bold" }}>
+                            Totals {item.quantity * item.price}
+                          </Text> */}
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })
+              : null}
+          </View>
+        </ScrollView>
       </View>
-      {/* modals */}
       <View style={styles.centeredView}>
         <Modal
           animationType="slide"
@@ -178,215 +229,249 @@ export default function Order(props) {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>Edit quantity</Text>
+              <Text style={styles.modalText}>Edit Quantity</Text>
 
               <TextInput
-                style={styles.input}
+                style={{
+                  width: 200,
+                  height: 50,
+                  textAlign: "center",
+                  backgroundColor: "#F8F8F8",
+                  marginBottom: 20,
+                }}
                 keyboardType="numeric"
                 onChangeText={(e) => setNewQuantity(e)}
-                placeholder="insert quantity"
+                placeholder="insert new quantity"
                 maxLength={2}
                 minLength={0}
               />
-
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                onPress={() => {
-                  editQuantity(newQuantity);
+              <View
+                style={{
+                  width: 200,
+                  height: 40,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
                 }}
               >
-                <Text style={styles.textStyle}>Submit</Text>
-              </TouchableHighlight>
+                <TouchableHighlight
+                  onPress={() => {
+                    editQuantity(newQuantity);
+                  }}
+                >
+                  <View
+                    style={{
+                      width: 95,
+                      height: 40,
+                      backgroundColor: "#1E2749",
+                      borderRadius: 5,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 15,
+                        color: "white",
+                      }}
+                    >
+                      Submit
+                    </Text>
+                  </View>
+                </TouchableHighlight>
 
-              <TouchableHighlight
-                style={{ ...styles.removeButton, backgroundColor: "#2196F3" }}
-                onPress={removeFromCarts}
-              >
-                <Text style={styles.textStyle}>Remove</Text>
-              </TouchableHighlight>
+                <TouchableHighlight onPress={removeFromCarts}>
+                  <View
+                    style={{
+                      width: 95,
+                      height: 40,
+                      backgroundColor: "#E14C17",
+                      borderRadius: 5,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 15,
+                        color: "white",
+                      }}
+                    >
+                      Remove
+                    </Text>
+                  </View>
+                </TouchableHighlight>
+              </View>
 
-              <TouchableHighlight
-                style={{ ...styles.closeButton, backgroundColor: "#2196F3" }}
+              <TouchableOpacity
                 onPress={() => {
                   setModalVisible(!modalVisible);
                 }}
               >
-                <Text style={styles.textStyle}>Cancel</Text>
-              </TouchableHighlight>
+                <View style={{ marginTop: 70, justifyContent: "flex-end" }}>
+                  <Text style={{ color: "#1E2749", fontWeight: "bold" }}>
+                    Cancel
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
       </View>
-      {/* modals end */}
 
-      <View style={styles.boxListOrder}>
-        <Text h5 style={{ fontWeight: "bold" }}>
-          Order Items
-        </Text>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View>
-            {carts
-              ? carts.map((item, index) => {
-                  return (
-                    <TouchableOpacity
-                      style={styles.card}
-                      key={index}
-                      onPress={() => {
-                        showModals(item.ProductId, item.price, item.quantity);
-                      }}
-                    >
-                      <Image
-                        style={styles.image}
-                        source={{ uri: item.Product.image_url }}
-                      />
-                      <View style={styles.innerTextCards}>
-                        <Text h4 style={{ fontWeight: "bold" }}>
-                          {item.Product.product_name}
-                        </Text>
-                        <Text>Rp.{item.price}</Text>
-                        <Text>Qty : {item.quantity}</Text>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                })
-              : null}
-          </View>
-        </ScrollView>
-      </View>
-
-      <TouchableHighlight
-        style={styles.rightBottomBar}
+      <TouchableOpacity
+        style={{
+          maxWidth: 400,
+          height: 50,
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: 30,
+        }}
         onPress={checkoutHandler}
       >
-        <View style={styles.checkoutBtn}>
-          <Text style={{ fontWeight: "bold", fontSize: 16, color: "#fff" }}>
+        <View
+          style={{
+            width: 350,
+            height: 50,
+            backgroundColor: "#1E2749",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 16,
+              color: "#fff",
+            }}
+          >
             Process Checkouts
           </Text>
         </View>
-      </TouchableHighlight>
-      <Button
-        title="Proccess Checkout x"
-        style={{ marginTop: 200 }}
-        onPress={checkoutHandler}
-        color="red"
-      />
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 2,
     backgroundColor: "#fff",
-    justifyContent: "space-around",
   },
-  headerOrder: {
-    flex: 1,
-    height: 200,
+  header: {
+    height: 180,
+    alignItems: "flex-start",
+    backgroundColor: "#1E2749",
+    justifyContent: "center",
     alignItems: "flex-start",
   },
-  headerOrderText: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "#fff",
-    top: 80,
-    left: 50,
+  boxHeader: {
+    top: 0,
+    width: 150,
+    height: 80,
+    left: 40,
+    // backgroundColor: "black",
     justifyContent: "center",
+    alignItems: "flex-start",
+  },
+  total: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 30,
+    // textShadowOffset: { width: 2, height: 2 },
+    // textShadowRadius: 1,
+    // textShadowColor: "#000",
+  },
+  items: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 12,
+  },
+  boxOrder: {
+    top: -30,
+    height: 520,
+    backgroundColor: "#fff",
+    borderTopRightRadius: 30,
+    // borderTopLeftRadius: 30,
+    borderBottomLeftRadius: 30,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 9,
+    },
+    shadowOpacity: 0.48,
+    shadowRadius: 11.95,
+
+    elevation: 18,
+  },
+  headerOrder: {
+    top: 10,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "flex-start",
+  },
+  cartsSection: {
+    // flex: 1,
+    height: 500,
+    top: 20,
+    // flex: 2,
+    backgroundColor: "#fff",
     alignItems: "center",
   },
-  bill: {
-    width: 200,
-    height: 25,
-    top: 20,
-    left: 22,
-    flexDirection: "row",
-  },
-  boxBill: {
-    flex: 0.5,
-    width: 300,
+  cart: {
+    marginTop: 10,
+    minWidth: 350,
     height: 120,
     backgroundColor: "#fff",
-    top: 130,
-    left: 50,
-    borderRadius: 20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 1,
     },
-    shadowOpacity: 0.32,
-    shadowRadius: 5.46,
-
-    elevation: 9,
-  },
-  boxListOrder: {
-    flex: 1.2,
-    width: 300,
-    backgroundColor: "#fff",
-    left: 50,
-    top: -100,
-    borderRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.32,
-    shadowRadius: 5.46,
-    elevation: 9,
-    padding: 20,
-  },
-  card: {
-    width: 260,
-    height: 80,
-    backgroundColor: "#fff",
-    display: "flex",
-    marginTop: 5,
-    display: "flex",
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
+    borderRadius: 10,
     flexDirection: "row",
+    overflow: "hidden",
     alignItems: "center",
-    padding: 0,
-    borderRadius: 10,
-    borderWidth: 0.7,
-    borderColor: "#EFEFEF",
-  },
-  image: {
-    width: 70,
-    height: 70,
-    borderRadius: 10,
-    left: 10,
-  },
-  innerTextCards: {
-    width: 200,
-    height: 100,
     padding: 10,
-    top: 5,
-    left: 15,
-    backgroundColor: "transparent",
-    justifyContent: "flex-start",
   },
-  checkoutBtn: {
-    top: 150,
-    left: 50,
-    width: 300,
-    height: 40,
-    backgroundColor: "#1E2749",
-    textAlign: "center",
-    alignItems: "center",
-    borderRadius: 10,
-    justifyContent: "center",
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
+  cartImage: {
+    left: 10,
+    width: 120,
+    height: 100,
+    borderTopLeftRadius: 5,
   },
+  cartText: {
+    left: 30,
+    maxWidth: 200,
+    height: 100,
+    color: "black",
+    justifyContent: "space-evenly",
+    flexDirection: "column",
+  },
+
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
   },
+
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+  // modals
+
   modalView: {
-    margin: 20,
+    height: 300,
+    width: 300,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
@@ -399,70 +484,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    justifyContent: "space-between",
   },
   openButton: {
-    backgroundColor: "#F194FF",
-    borderRadius: 20,
+    backgroundColor: "#1E2749",
+    borderRadius: 5,
     padding: 10,
     elevation: 2,
   },
   removeButton: {
     backgroundColor: "red",
-    borderRadius: 20,
+    backgroundColor: "#1E2749",
+    borderRadius: 5,
     padding: 10,
     elevation: 2,
   },
-  closeButton: {
-    backgroundColor: "blue",
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
+
   textStyle: {
     color: "white",
     fontWeight: "bold",
-    textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-  // modals
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  openButton: {
-    backgroundColor: "#F194FF",
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 15,
     textAlign: "center",
   },
 });

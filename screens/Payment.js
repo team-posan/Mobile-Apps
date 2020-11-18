@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Button, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+} from "react-native";
 import { Text } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
 
 import { checkout, paymentServices } from "../store/actions/storeActions";
-import axios from 'axios'
-
+import axios from "axios";
 
 export default function Payment(props) {
-// <<<<<<< dev-apps
-  const [ cekStatusUrl, setCekStatusUrl ] = useState('')
-  const [ statusPay, setStatusPay ] = useState('')
+  // <<<<<<< dev-apps
+  const [cekStatusUrl, setCekStatusUrl] = useState("");
+  const [statusPay, setStatusPay] = useState("");
 
   const dispatch = useDispatch();
   const { paymentBills, amount, orders, payment } = useSelector(
@@ -20,10 +25,10 @@ export default function Payment(props) {
   const [idToPayment, setIdToPayment] = useState([]);
 
   useEffect(() => {
-    console.log(payment.statusUrl, '??????')
+    console.log(payment.statusUrl, "??????");
   }, [payment]);
 
-  const [cekLink, setCekLink ] = useState('testing')
+  const [cekLink, setCekLink] = useState("testing");
 
   useEffect(() => {
     console.log(orders, "ini yang dicari");
@@ -32,73 +37,68 @@ export default function Payment(props) {
         return item.id;
       });
       setIdToPayment(idCartsFilter);
-      console.log(idCartsFilter, '>>>>');
+      console.log(idCartsFilter, ">>>>");
     }
   }, [orders]);
-//   const [ idToPay, setIdToPay ] = useState([])
-//   const { orders, access } = useSelector((state) => state);
+  //   const [ idToPay, setIdToPay ] = useState([])
+  //   const { orders, access } = useSelector((state) => state);
 
-//   useEffect(() => {
-//     const filterId = orders.map(cart => cart.id)
-//     setIdToPay(filterId)
-//     // console.log('dari payment')
-//   }, [orders])
+  //   useEffect(() => {
+  //     const filterId = orders.map(cart => cart.id)
+  //     setIdToPay(filterId)
+  //     // console.log('dari payment')
+  //   }, [orders])
 
-//   const dispatch = useDispatch()
-// >>>>>>> layout
+  //   const dispatch = useDispatch()
+  // >>>>>>> layout
 
   function goToCompleate() {
     // console.log('dari payment', orders)
-    dispatch(paymentServices(idToPayment, paymentBills))
+    dispatch(paymentServices(idToPayment, paymentBills));
     // cekStatusUrl()
     // .then(test => {console.log(test)})
     setTimeout(() => {
       props.navigation.navigate("Compleate");
-    }, 3000)
+    }, 3000);
   }
 
   const request = () => {
-    console.log(idToPayment,'asdasd')
-    axios.get(`${payment.statusUrl}`,{
-      headers:{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Basic U0ItTWlkLXNlcnZlci00QjR5WFZJdjFDODBYbXF0amJlUExtQU06'
-      }
-    })
-      .then(result=>{
-        console.log(result.data,'asu')
+    console.log(idToPayment, "asdasd");
+    axios
+      .get(`${payment.statusUrl}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization:
+            "Basic U0ItTWlkLXNlcnZlci00QjR5WFZJdjFDODBYbXF0amJlUExtQU06",
+        },
       })
-      .catch(err=>{
-        console.log(err)
+      .then((result) => {
+        console.log(result.data, "waduh");
       })
-  }
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputBox}>
-        <Text style={styles.text}>Compleate Your Order</Text>
-        <Text> payment bills {paymentBills}</Text>
-        <Text style={{ marginTop: 300 }}>{amount}</Text>
-        {/* <Text> amount {JSON.stringify(orders)}</Text> */}
-        <Text style={{ marginTop: 50 }}>{JSON.stringify(idToPayment)}</Text>
-
-         {/* <Text style={styles.text}>Complete Your Order</Text> */}
-
+      <View>
+        <Text style={styles.textHeader}>Pay With Go-Pay</Text>
+        <Text style={styles.paymentBills}>Total Amount {paymentBills}</Text>
       </View>
 
-      <TouchableOpacity style={styles.rightBottomBar} onPress={goToCompleate}>
+      <Image
+        source={require("../assets/undraw_powerful_26ry.png")}
+        style={{ width: 330, height: 200, backgroundColor: "gray" }}
+      />
+      <TouchableOpacity onPress={goToCompleate}>
         <View style={styles.checkoutBtn}>
           <Text style={{ fontWeight: "bold", fontSize: 16, color: "#fff" }}>
-            Payment
+            Process Payment
           </Text>
         </View>
       </TouchableOpacity>
-      {/* <Button
-        title="request"
-        onPress={request}
-        /> */}
-        {/* {request()} */}
     </View>
   );
 }
@@ -111,27 +111,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-around",
   },
-  text: {
+  textHeader: {
     width: 250,
-    fontSize: 20,
+    fontSize: 30,
     textAlign: "center",
+    fontWeight: "bold",
+    color: "#1E2749",
   },
-  input: {
-    height: 40,
+  paymentBills: {
     width: 250,
-    borderColor: "#1E2749",
-    borderWidth: 1,
-    borderRadius: 10,
+    fontSize: 18,
     textAlign: "center",
-    backgroundColor: "white",
-  },
-  inputBox: {
-    width: 400,
-    height: 300,
-    backgroundColor: "#fff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-evenly",
+    fontWeight: "bold",
+    color: "#1E2749",
   },
   checkoutBtn: {
     width: 200,
