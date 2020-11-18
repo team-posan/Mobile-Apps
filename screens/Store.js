@@ -8,6 +8,7 @@ import {
   Dimensions,
   FlatList,
 } from "react-native";
+import { Button } from '@ui-kitten/components';
 import { Text } from "react-native-elements";
 import {
   fetchProducts,
@@ -70,77 +71,11 @@ export default function Store(props) {
     }
   }
 
-  const dummy = [
-    {
-      id: 1,
-      title: "Kopi",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 2,
-      title: "Teh",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 4,
-      title: "Roko",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 5,
-      title: "Roko",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 6,
-      title: "Roko",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 7,
-      title: "Roko",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 8,
-      title: "Roko",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 9,
-      title: "Roko",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 10,
-      title: "Roko",
-      desc: "awaw",
-      uri:
-        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-  ];
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text h4 style={{ color: "white" }}>
-          Pilih Product
+        Pilih Product
         </Text>
         <Text h5 style={{ fontWeight: "bold", color: "white" }}>
           Store {storeName}
@@ -151,7 +86,9 @@ export default function Store(props) {
         {/* <Text h5 style={{ fontWeight: "bold" }}>
           Pilih Product
         </Text> */}
-        <View>
+        <View style={{
+          width: 'auto'
+        }}>
           <FlatList
             showsVerticalScrollIndicator={false}
             data={dataProducts}
@@ -168,7 +105,7 @@ export default function Store(props) {
                   })
                 }
               >
-                <View style={styles.card}>
+                <View style={[styles.card]}>
                   <Image
                     style={styles.image}
                     source={{ uri: item.image_url }}
@@ -212,14 +149,14 @@ export default function Store(props) {
           </View>
         </TouchableOpacity>
       </View>
-      <View style={styles.menuNav}>
+      {/* <View style={styles.menuNav}>
         <View style={styles.left}>
           <Text>Discover</Text>
         </View>
         <View style={styles.right}>
           <Text>History</Text>
         </View>
-      </View>
+      </View> */}
     </View>
   );
 }
@@ -231,13 +168,13 @@ const styles = StyleSheet.create({
     height: size,
   },
   item: {
-    flex: 1,
+    // flex: 1,
     margin: 3,
     backgroundColor: "lightblue",
   },
   container: {
     flex: 1,
-    // backgroundColor: "#C4C4C4",
+    backgroundColor: "#fff",
     justifyContent: "space-around",
   },
   header: {
@@ -251,29 +188,30 @@ const styles = StyleSheet.create({
     // marginTop: -10,
   },
   productsContainer: {
-    left: -10,
+    // left: -10,
     // padding: 20,
-    height: 520,
+    height: '70%',
     // backgroundColor: "#C4C4C4",
-    display: "flex",
+    // display: "flex",
     alignItems: "center",
+    justifyContent: 'center',
   },
 
   card: {
-    width: 150,
-    height: 180,
-    marginLeft: 20,
-    marginTop: 20,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "space-around",
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#C4C4C4",
+    margin: 5,
+    elevation: 1
   },
   image: {
-    width: 150,
-    height: 150,
+    width: size - 45,
+    height: size - 40,
     borderRadius: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 10,
+
 
     // shadowColor: "#000",
     // shadowOffset: {
@@ -286,10 +224,11 @@ const styles = StyleSheet.create({
     // elevation: 14,
   },
   productTextCard: {
-    width: 150,
+    // width: 150,
     // backgroundColor: "black",
-    marginTop: 25,
-    display: "flex",
+    marginTop: 5,
+    marginLeft: 10,
+    // display: "flex",
     flexDirection: "row",
   },
   innerTextCards: {
@@ -331,6 +270,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E14C17",
     padding: 10,
     paddingLeft: 20,
+    // alignSelf: 'flex-end',
     justifyContent: "space-between",
     flexDirection: "row",
   },

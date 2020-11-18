@@ -200,6 +200,7 @@ export const fetchCartsHistory = (access) => {
     })
       .then((res) => res.json())
       .then((cartsHistory) => {
+        // console.log('>>.', cartsHistory)
         dispatch({
           type: "FETCH_CARTS_HISTORY",
           payload: cartsHistory,

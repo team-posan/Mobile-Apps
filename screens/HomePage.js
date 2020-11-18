@@ -5,12 +5,11 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  TouchableHighlight,
   Image,
   Dimensions
 } from "react-native";
-import { Text } from "react-native-elements";
 import { fetchStore } from "../store/actions/storeActions";
+import { Text, Card } from '@ui-kitten/components'
 
 const width = Dimensions.get('screen').width
 
@@ -42,22 +41,43 @@ export default function HomePage(props) {
   return (
     <View style={styles.container}>
       <View style={[styles.header]}>
-        <Text h4 style={{ color: "white" }}>
+        <Text category='h1' style={{ color: "white" }}>
           Hai, User
         </Text>
-        <Text h5 style={{ fontWeight: "bold", color: "white" }}>
+        <Text category='h5' style={{ fontWeight: "bold", color: "white" }}>
           {phoneNumber}
         </Text>
       </View>
       <View style={styles.productsContainer}>
+        <Text category='h4' style={{ marginBottom: 10, textAlign: 'center' }}>
+          Pilih Toko Terdekat
+        </Text>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text h5 style={{ fontWeight: "bold" }}>
-            Pilih Toko Terdekat
-          </Text>
+
           <View>
             {dataStore.map((item) => {
               return (
-                <TouchableOpacity
+                <Card key={item.id}
+                  style={{marginBottom: 10}}
+                  onPress={() => storeIdHandler(item.id)}>
+                <View style={{flexDirection: 'row'}}>
+                  <Image
+                    style={styles.image}
+                    source={{
+                      uri:
+                        "https://images.pexels.com/photos/683039/pexels-photo-683039.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                    }}
+                  />
+                  <View style={styles.innerTextCards}>
+                    <Text category='h4' style={{fontWeight: 'bold'}}>{item.store_name}</Text>
+                    <Text category='h6' >{item.store_address}</Text>
+                    {/* <Text>{item.id}</Text> */}
+                  </View>
+                </View>
+              </Card>
+              );
+            })}
+            {/* <TouchableOpacity
                   style={styles.card}
                   key={item.id}
                   onPress={() => storeIdHandler(item.id)}
@@ -74,14 +94,12 @@ export default function HomePage(props) {
                     <Text>{item.store_address}</Text>
                     <Text>{item.id}</Text>
                   </View>
-                </TouchableOpacity>
-              );
-            })}
+                </TouchableOpacity> */}
           </View>
         </ScrollView>
       </View>
 
-      <View style={styles.menuNav}>
+      {/* <View style={styles.menuNav}>
         <View style={styles.left}>
           <Text>Discover</Text>
         </View>
@@ -90,7 +108,7 @@ export default function HomePage(props) {
             <Text>History</Text>
           </View>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 }
@@ -98,8 +116,9 @@ export default function HomePage(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#C4C4C4",
-    justifyContent: "space-around",
+    flexDirection: 'column',
+    backgroundColor: "#fff",
+    justifyContent: 'space-between',
   },
   header: {
     height: 150,
@@ -112,7 +131,7 @@ const styles = StyleSheet.create({
     // marginTop: -10,
   },
   productsContainer: {
-    height: 580,
+    height: '85%',
     // backgroundColor: "#C4C4C4",
     paddingLeft: 30,
     paddingRight: 30,
@@ -130,7 +149,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     padding: 0,
     borderRadius: 10,
-    
+
     marginBottom: 15,
     shadowColor: "#000",
     shadowOffset: {
@@ -145,17 +164,16 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-    borderBottomLeftRadius: 10,
-    borderTopLeftRadius: 10,
+    borderRadius: 10,
     marginLeft: -5,
   },
   innerTextCards: {
-    width: 200,
-    height: 100,
+    width: 210,
+    // height: 100,
     marginLeft: 20,
-    padding: 10,
-    backgroundColor: "transparent",
-    justifyContent: "flex-start",
+    // padding: 10,
+    // backgroundColor: "transparent",
+    // justifyContent: "flex-start",
   },
   menuNav: {
     width: '100%',
