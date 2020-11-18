@@ -203,7 +203,7 @@ export const fetchCartsHistory = (access) => {
         // console.log('>>.', cartsHistory)
         dispatch({
           type: "FETCH_CARTS_HISTORY",
-          payload: cartsHistory,
+          payload: cartsHistory.carts.reverse(),
         });
       })
       .catch((err) => console.log(err, "error while fetch cart order"));

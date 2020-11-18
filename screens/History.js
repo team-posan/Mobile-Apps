@@ -46,6 +46,7 @@ export default function History() {
                       }}>
                         <View>
                           <Text category='h6' >{historyCart.quantity} {historyCart.Product.product_name}</Text>
+                          <Text category='h6' >Rp {(historyCart.quantity * historyCart.Product.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ,-</Text>
                           <Text>{historyCart.createdAt.split('T')[0]}, {historyCart.createdAt.split('T')[1].slice(0, 5)}</Text>
                         </View>
                         <View>

@@ -36,18 +36,27 @@ const BottomTabBar = ({ navigation, state }) => (
   </BottomNavigation>
 );
 
-function MainNaviigation() {
+function RouteNavigation () {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Landing" component={LandingPage} />
-      <Stack.Screen name="Verify" component={Verify} />
-      <Stack.Screen name="HomePage" component={HomePage} />
-      <Stack.Screen name="Store" component={Store} />
-      <Stack.Screen name="Order" component={Order} />
-      <Stack.Screen name="Payment" component={Payament} />
-      <Stack.Screen name="Compleate" component={Compleate} />
-      <Stack.Screen name="History" component={History} />
+    {/* <Stack.Screen name="Landing" component={LandingPage} />
+    <Stack.Screen name="Verify" component={Verify} /> */}
+    <Stack.Screen name="HomePage" component={HomePage} />
+    <Stack.Screen name="Store" component={Store} />
     </Stack.Navigator>
+  )
+}
+
+function MainNaviigation(propsData) {
+
+
+
+  return (
+    <Tab.Navigator tabBar={props => <BottomTabBar {...props} />}>
+      <Tab.Screen name="Discover"
+        children={() => <RouteNavigation numberPhone={propsData.numberPhone} />} />
+      <Tab.Screen name="History" component={History} />
+    </Tab.Navigator>
   );
 }
 
@@ -66,10 +75,14 @@ export default function App() {
       <ApplicationProvider {...eva} theme={eva.light}>
         <StatusBar style="dark"/>
         <NavigationContainer>
-          <Tab.Navigator tabBar={props => <BottomTabBar {...props} />}>
-            <Tab.Screen name="Discover" component={MainNaviigation} />
-            <Tab.Screen name="History" component={History} />
-          </Tab.Navigator>
+          <Stack.Navigator>
+            <Stack.Screen name="Landing" component={LandingPage} />
+            <Stack.Screen name="Verify" component={Verify} />
+            <Stack.Screen name="MainNaviigation" component={MainNaviigation} />
+            <Stack.Screen name="Order" component={Order} />
+    <Stack.Screen name="Payment" component={Payament} />
+    <Stack.Screen name="Compleate" component={Compleate} />
+          </Stack.Navigator>
         </NavigationContainer>
       </ApplicationProvider>
     </StateProvider>

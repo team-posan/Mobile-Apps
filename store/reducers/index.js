@@ -100,7 +100,7 @@ const reducer = (state = initialState, action) => {
 
     case "FETCH_CARTS_HISTORY":
       // console.log(action.payload)
-      return { ...state, history: action.payload.carts };
+      return { ...state, history: action.payload };
 
     default:
       return state;
