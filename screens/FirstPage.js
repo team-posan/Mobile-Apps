@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   StyleSheet,
   View,
+  Image,
   TextInput,
   TouchableHighlight,
 } from "react-native";
 import { loginCustomer } from "../store/actions/storeActions";
 import { text, inputText, button } from "../styles/index";
-import { Button, Icon, Layout, Text, Input } from '@ui-kitten/components';
+import { Button, Icon, Layout, Text, Input } from "@ui-kitten/components";
 
 export default function FirstPage(props) {
   const dispatch = useDispatch();
@@ -51,27 +52,39 @@ export default function FirstPage(props) {
   }
 
   return (
-    <Layout style={styles.container} level='1'>
+    <Layout style={styles.container} level="1">
+      <Image
+        source={require("../assets/undraw_Note_list_re_r4u9.png")}
+        style={{
+          width: 330,
+          height: 230,
+          backgroundColor: "gray",
+        }}
+      />
+
       <View style={styles.inputBox}>
-        <Text category='h1'>POSAN</Text>
-        <View style={{
-          flexDirection: 'row',
-          justifyContent: 'center'
-        }}>
+        <Text category="h1">POSAN</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
           <Input
             style={styles.inputText}
             dataDetectorTypes="phoneNumber"
-            placeholder='Phone number. e.g. 08...'
+            placeholder="Phone number. e.g. 08..."
             value={phoneNumber}
             maxLength={13}
             minLength={11}
             keyboardType="phone-pad"
             onChangeText={(e) => setPhoneNumber(e)}
           />
-           <Button
-            style={{backgroundColor: "#1E2749" ,marginLeft:5}}
-            size={'medium'}
-            onPress={login}>
+          <Button
+            style={{ backgroundColor: "#1E2749", marginLeft: 5 }}
+            size={"medium"}
+            onPress={login}
+          >
             Login
           </Button>
         </View>
@@ -91,15 +104,15 @@ const styles = StyleSheet.create({
     height: 17,
     width: 230,
     marginRight: 5,
-    marginTop:3
+    marginTop: 3,
   },
   container: {
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     // marginBottom: 50
-    paddingBottom: 100
+    paddingBottom: 100,
   },
   input: {
     height: 40,
